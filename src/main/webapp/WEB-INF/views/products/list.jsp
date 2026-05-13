@@ -10,14 +10,14 @@
         </tr>
         <c:forEach var="p" items="${products}">
             <tr>
-                <td>${p.id}</td>
-                <td>${p.name}</td>
+                <td>${p.productID}</td>
+                <td>${p.productName}</td>
                 <td>${p.brand}</td>
                 <td>${p.price}</td>
-                <td>${p.stockQuantity}</td>
+                <td>${p.stock_quantity}</td>
                 <td>
-                    <a href="edit/${p.id}">Sửa</a> | 
-                    <a href="delete/${p.id}" onclick="return confirm('Xóa?')">Xóa</a>
+                    <a href="edit/${p.productID}">Sửa</a> | 
+                    <a href="delete/${p.productID}" onclick="return confirm('Xóa?')">Xóa</a>
                 </td>
             </tr>
         </c:forEach>

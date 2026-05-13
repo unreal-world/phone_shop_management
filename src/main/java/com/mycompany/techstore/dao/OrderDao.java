@@ -1,0 +1,14 @@
+package com.mycompany.techstore.dao;
+
+import java.util.List;
+
+import com.mycompany.techstore.model.Order;
+
+public interface OrderDao {
+    List<Order> getAllOrders();
+    Order getOrderById(String orderID);
+    List<Order> getOrdersByUserId(String userID);
+    void addOrder(Order order);
+    void updateOrder(Order order);
+    void deleteOrder(String orderID);
+}

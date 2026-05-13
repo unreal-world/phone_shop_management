@@ -28,7 +28,7 @@ public class ProductController {
 
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute("product") Product product) {
-        if (product.getId() == null) {
+        if (product.getProductID() == null) {
             productService.saveProduct(product);
         } else {
             productService.updateProduct(product);
@@ -36,15 +36,15 @@ public class ProductController {
         return "redirect:/products/list";
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("product", productService.getProductById(id));
+    @GetMapping("/edit/{productID}")
+    public String showEditForm(@PathVariable("productID") String productID, Model model) {
+        model.addAttribute("product", productService.getProductById(productID));
         return "products/form";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
-        productService.deleteProduct(id);
+    @GetMapping("/delete/{productID}")
+    public String deleteProduct(@PathVariable("productID") String productID) {
+        productService.deleteProduct(productID);
         return "redirect:/products/list";
     }
 }

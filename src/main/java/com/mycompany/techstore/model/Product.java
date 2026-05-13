@@ -1,31 +1,34 @@
 package com.mycompany.techstore.model;
 
+import java.util.List;
+
 public class Product {
-    private Long id;
-    private String name;
+    private String productID;
+    private String productName;
     private String brand;
     private Double price;
     private String description;
-    private Integer stockQuantity;
+    private Integer stock_quantity;
+    private List<Image> image;
 
     // Constructors
     public Product() {}
 
-    public Product(Long id, String name, String brand, Double price, String description, Integer stockQuantity) {
-        this.id = id;
-        this.name = name;
+    public Product(String productID, String productName, String brand, Double price, String description, Integer stock_quantity) {
+        this.productID = productID;
+        this.productName = productName;
         this.brand = brand;
         this.price = price;
         this.description = description;
-        this.stockQuantity = stockQuantity;
+        this.stock_quantity = stock_quantity;
     }
 
-    public Long getId() {
-        return id;
+    public String getProductID() {
+        return productID;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
     public String getBrand() {
@@ -40,16 +43,20 @@ public class Product {
         return description;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Integer getStock_quantity() {
+        return stock_quantity;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public List<Image> getImage() {
+        return image;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public void setBrand(String brand) {
@@ -64,8 +71,12 @@ public class Product {
         this.description = description;
     }
 
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setStock_quantity(Integer stock_quantity) {
+        this.stock_quantity = stock_quantity;
+    }
+
+    public void setImage(List<Image> image) {
+        this.image = image;
     }
     
 }
