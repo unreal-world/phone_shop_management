@@ -1,0 +1,40 @@
+# --- Maven ---
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# --- NetBeans ---
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-conf/
+nb-configuration.xml
+.netbeans_derby/
+
+# --- IDEs khác (Nếu bạn dùng chung với bạn bè dùng IntelliJ/VS Code) ---
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# --- Hệ điều hành & Log ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+
+# --- Bảo mật (Tùy chọn) ---
+# Nếu bạn không muốn lộ mật khẩu database lên GitHub, hãy bỏ comment dòng dưới:
+# src/main/resources/database.properties
