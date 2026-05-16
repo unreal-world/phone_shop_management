@@ -31,10 +31,13 @@
 
     <table>
         <tr>
-            <th>ID</th>
+            <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
+                <th>ID</th>
+            </c:if>
             <th>Tên sản phẩm</th>
             <th>Hãng</th>
             <th>Giá</th>
+            <th>Mô tả</th>
             <th>Tồn kho</th>
             <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
                 <th>Hành động</th>
@@ -42,10 +45,13 @@
         </tr>
         <c:forEach var="p" items="${products}">
             <tr>
-                <td>${p.productID}</td>
+                <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
+                    <td>${p.productID}</td>
+                </c:if>
                 <td>${p.productName}</td>
                 <td>${p.brand}</td>
                 <td>${p.price}</td>
+                <td>${p.description}</td>
                 <td>${p.stock_quantity}</td>
                 <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
                     <td>

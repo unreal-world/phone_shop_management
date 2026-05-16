@@ -28,7 +28,8 @@ public class ProductController {
 
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute("product") Product product) {
-        if (product.getProductID() == null) {
+        if (product.getProductID() == null || product.getProductID().trim().isEmpty()) {
+            product.setProductID(java.util.UUID.randomUUID().toString());
             productService.saveProduct(product);
         } else {
             productService.updateProduct(product);
