@@ -11,4 +11,8 @@ public interface UserService {
     void saveUser(User user);
     void updateUser(User user);
     void deleteUser(String userID);
+    User authenticate(String username, String password);
+    void register(User user);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }
