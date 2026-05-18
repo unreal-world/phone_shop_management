@@ -69,4 +69,23 @@ public class OrderController {
         model.addAttribute("orders", orderService.getOrdersByUserId(user.getUserID()));
         return "orders/user-orders";
     }
+
+    @PostMapping("/update-status")
+    public String updateOrderStatus(@RequestParam("orderID") String orderID, 
+                                    @RequestParam("status") String status,
+                                    jakarta.servlet.http.HttpSession session,
+                                    org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        com.mycompany.techstore.model.User user = (com.mycompany.techstore.model.User) session.getAttribute("loggedInUser");
+        if (user == null || !"ADMIN".equals(user.getRole().name())) {
+            return "redirect:/";
+        }
+
+        Order order = orderService.getOrderById(orderID);
+        if (order != null) {
+            order.setOrderStatus(com.mycompany.techstore.model.OrderStatus.valueOf(status));
+            orderService.updateOrder(order);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật trạng thái đơn hàng thành công!");
+        }
+        return "redirect:/orders/list";
+    }
 }

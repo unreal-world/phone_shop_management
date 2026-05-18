@@ -27,10 +27,14 @@
                             <span>Xin chào, <strong>${sessionScope.loggedInUser.fullName != null &&
                                     !sessionScope.loggedInUser.fullName.isEmpty() ? sessionScope.loggedInUser.fullName :
                                     sessionScope.loggedInUser.username}</strong>!</span>
-                            <a href="${pageContext.request.contextPath}/users/profile" class="btn-info">Quản lý tài
-                                khoản</a>
-                            <a href="${pageContext.request.contextPath}/orders/my-orders" class="btn-success" style="background-color: #28a745; margin-left: 10px;">Đơn hàng của tôi</a>
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="btn-danger">Đăng xuất</a>
+                            <a href="${pageContext.request.contextPath}/users/profile" class="btn-info">Quản lý tài khoản</a>
+                            <c:if test="${sessionScope.loggedInUser.role != 'ADMIN'}">
+                                <a href="${pageContext.request.contextPath}/orders/my-orders" class="btn-success" style="background-color: #28a745; margin-left: 10px;">Đơn hàng của tôi</a>
+                            </c:if>
+                            <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
+                                <a href="${pageContext.request.contextPath}/orders/list" class="btn-success" style="background-color: #007bff; margin-left: 10px;">Quản lý Đơn hàng</a>
+                            </c:if>
+                            <a href="${pageContext.request.contextPath}/auth/logout" class="btn-danger" style="margin-left: 10px;">Đăng xuất</a>
                         </c:when>
                         <c:otherwise>
                             <a href="${pageContext.request.contextPath}/auth/login" class="btn-primary">Đăng nhập</a>
