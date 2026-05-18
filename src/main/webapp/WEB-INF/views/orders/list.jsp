@@ -33,48 +33,57 @@
     </c:if>
 
     <c:choose>
-        <c:when test="${empty orders}">
+        <c:when test="${empty groupedOrders}">
             <div class="empty-orders">
                 <p>Hệ thống chưa có đơn hàng nào.</p>
             </div>
         </c:when>
         <c:otherwise>
-            <table>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>User ID</th>
-                    <th>Ngày đặt</th>
-                    <th>Người nhận</th>
-                    <th>SĐT</th>
-                    <th>Địa chỉ</th>
-                    <th>Trạng thái hiện tại</th>
-                    <th>Cập nhật trạng thái</th>
-                </tr>
-                <c:forEach var="order" items="${orders}">
+            <c:forEach var="entry" items="${groupedOrders}">
+                <div style="background-color: #f8f9fa; padding: 10px; border-left: 5px solid #007bff; margin-top: 30px; border-radius: 4px;">
+                    <h3 style="margin: 0; color: #333;"> Khách hàng: ${entry.key.fullName != null && !entry.key.fullName.isEmpty() ? entry.key.fullName : entry.key.username} 
+                        <span style="font-size: 14px; font-weight: normal; color: #666;">(Tài khoản: ${entry.key.username})</span>
+                    </h3>
+                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">
+                        Email: ${entry.key.email != null ? entry.key.email : 'N/A'} | SĐT: ${entry.key.phoneNumber != null ? entry.key.phoneNumber : 'N/A'}
+                    </p>
+                </div>
+                
+                <table>
                     <tr>
-                        <td>${order.orderID}</td>
-                        <td>${order.userID}</td>
-                        <td>${order.orderDate}</td>
-                        <td>${order.receiver}</td>
-                        <td>${order.phoneNumber}</td>
-                        <td>${order.shippingAddress}</td>
-                        <td class="status-${order.orderStatus}">${order.orderStatus}</td>
-                        <td>
-                            <form action="${pageContext.request.contextPath}/orders/update-status" method="post" style="margin: 0; display: inline-flex; align-items: center; gap: 5px;">
-                                <input type="hidden" name="orderID" value="${order.orderID}">
-                                <select name="status">
-                                    <option value="PENDING" ${order.orderStatus == 'PENDING' ? 'selected' : ''}>PENDING</option>
-                                    <option value="PROCESSING" ${order.orderStatus == 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
-                                    <option value="COMPLETED" ${order.orderStatus == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
-                                    <option value="CANCELLED" ${order.orderStatus == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
-                                    <option value="FAILED" ${order.orderStatus == 'FAILED' ? 'selected' : ''}>FAILED</option>
-                                </select>
-                                <button type="submit" class="btn-update">Lưu</button>
-                            </form>
-                        </td>
+                        <th>Mã đơn hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Người nhận</th>
+                        <th>SĐT giao hàng</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th>Trạng thái hiện tại</th>
+                        <th>Cập nhật trạng thái</th>
                     </tr>
-                </c:forEach>
-            </table>
+                    <c:forEach var="order" items="${entry.value}">
+                        <tr>
+                            <td>${order.orderID}</td>
+                            <td>${order.orderDate}</td>
+                            <td>${order.receiver}</td>
+                            <td>${order.phoneNumber}</td>
+                            <td>${order.shippingAddress}</td>
+                            <td class="status-${order.orderStatus}">${order.orderStatus}</td>
+                            <td>
+                                <form action="${pageContext.request.contextPath}/orders/update-status" method="post" style="margin: 0; display: inline-flex; align-items: center; gap: 5px;">
+                                    <input type="hidden" name="orderID" value="${order.orderID}">
+                                    <select name="status">
+                                        <option value="PENDING" ${order.orderStatus == 'PENDING' ? 'selected' : ''}>PENDING</option>
+                                        <option value="PROCESSING" ${order.orderStatus == 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
+                                        <option value="COMPLETED" ${order.orderStatus == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                                        <option value="CANCELLED" ${order.orderStatus == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                                        <option value="FAILED" ${order.orderStatus == 'FAILED' ? 'selected' : ''}>FAILED</option>
+                                    </select>
+                                    <button type="submit" class="btn-update">Lưu</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:forEach>
         </c:otherwise>
     </c:choose>
 </body>

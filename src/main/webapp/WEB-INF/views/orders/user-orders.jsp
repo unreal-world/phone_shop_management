@@ -29,7 +29,7 @@
         <c:when test="${empty orders}">
             <div class="empty-orders">
                 <p>Bạn chưa có đơn hàng nào.</p>
-                <a href="${pageContext.request.contextPath}/products/list" style="color: #007bff;">Bắt đầu mua sắm ngay</a>
+                <a href="${pageContext.request.contextPath}/" style="color: #007bff;">Bắt đầu mua sắm ngay</a>
             </div>
         </c:when>
         <c:otherwise>

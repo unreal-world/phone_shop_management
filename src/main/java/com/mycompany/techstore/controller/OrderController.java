@@ -14,9 +14,25 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private com.mycompany.techstore.service.UserService userService;
+
     @GetMapping("/list")
     public String listOrders(Model model) {
-        model.addAttribute("orders", orderService.getAllOrders());
+        java.util.List<Order> allOrders = orderService.getAllOrders();
+        java.util.Map<com.mycompany.techstore.model.User, java.util.List<Order>> groupedOrders = new java.util.HashMap<>();
+        java.util.Map<String, com.mycompany.techstore.model.User> userCache = new java.util.HashMap<>();
+        
+        for (Order order : allOrders) {
+            String uid = order.getUserID();
+            com.mycompany.techstore.model.User user = userCache.computeIfAbsent(uid, k -> userService.getUserById(k));
+            
+            if (user != null) {
+                groupedOrders.computeIfAbsent(user, k -> new java.util.ArrayList<>()).add(order);
+            }
+        }
+        
+        model.addAttribute("groupedOrders", groupedOrders);
         return "orders/list";
     }
 
