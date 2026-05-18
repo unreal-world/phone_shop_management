@@ -59,6 +59,16 @@
                             </c:if>
                         </div>
                         
+                        <div style="margin-bottom: 20px;">
+                            <form action="${pageContext.request.contextPath}/" method="get" style="display: flex; gap: 10px; max-width: 500px;">
+                                <input type="text" name="keyword" value="${keyword}" placeholder="Tìm kiếm sản phẩm theo tên..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                                <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Tìm kiếm</button>
+                                <c:if test="${not empty keyword}">
+                                    <a href="${pageContext.request.contextPath}/" style="padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">Xóa lọc</a>
+                                </c:if>
+                            </form>
+                        </div>
+                        
                         <c:if test="${not empty successMessage}">
                             <div style="color: green; margin-bottom: 15px; padding: 10px; border: 1px solid green; background-color: #d4edda; border-radius: 4px;">
                                 ${successMessage}

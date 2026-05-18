@@ -40,4 +40,9 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(String productID) {
         return productDao.getProductById(productID);
     }
+
+    @Override
+    public List<Product> searchProducts(String keyword) {
+        return productDao.searchProducts(keyword);
+    }
 }

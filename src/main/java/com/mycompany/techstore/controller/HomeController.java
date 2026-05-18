@@ -14,9 +14,14 @@ public class HomeController {
     private ProductService productService;
 
     @GetMapping("/")
-    public String index(HttpSession session, Model model) {
+    public String index(HttpSession session, Model model, @org.springframework.web.bind.annotation.RequestParam(value = "keyword", required = false) String keyword) {
         if (session.getAttribute("loggedInUser") != null) {
-            model.addAttribute("products", productService.getAllProducts());
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                model.addAttribute("products", productService.searchProducts(keyword.trim()));
+                model.addAttribute("keyword", keyword.trim());
+            } else {
+                model.addAttribute("products", productService.getAllProducts());
+            }
         }
         return "home";
     }

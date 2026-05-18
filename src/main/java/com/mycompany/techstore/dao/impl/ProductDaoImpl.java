@@ -61,4 +61,18 @@ public class ProductDaoImpl implements ProductDao {
         ));
         return products.isEmpty() ? null : products.get(0);
     }
+
+    @Override
+    public List<Product> searchProducts(String keyword) {
+        String sql = "SELECT * FROM Product WHERE LOWER(productName) LIKE LOWER(?)";
+        String searchPattern = "%" + keyword + "%";
+        return jdbcTemplate.query(sql, new Object[]{searchPattern}, (rs, rowNum) -> new Product(
+                rs.getString("productID"),
+                rs.getString("productName"),
+                rs.getString("brand"),
+                rs.getDouble("price"),
+                rs.getString("description"),
+                rs.getInt("stock_quantity")
+        ));
+    }
 }
