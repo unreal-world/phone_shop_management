@@ -59,4 +59,14 @@ public class OrderController {
         model.addAttribute("order", orderService.getOrderById(orderID));
         return "orders/detail";
     }
+
+    @GetMapping("/my-orders")
+    public String myOrders(jakarta.servlet.http.HttpSession session, Model model) {
+        com.mycompany.techstore.model.User user = (com.mycompany.techstore.model.User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/auth/login";
+        }
+        model.addAttribute("orders", orderService.getOrdersByUserId(user.getUserID()));
+        return "orders/user-orders";
+    }
 }
