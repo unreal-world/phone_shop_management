@@ -5,17 +5,7 @@
 
         <head>
             <title>Phone Store - Home</title>
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/home.css">
-            <style>
-                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-                th { background-color: #f2f2f2; color: #333; }
-                .btn-add { display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; }
-                .btn-add:hover { background-color: #218838; }
-                .action-link { text-decoration: none; padding: 4px 8px; border-radius: 4px; }
-                .edit-link { background-color: #ffc107; color: #000; }
-                .delete-link { background-color: #dc3545; color: white; }
-            </style>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/home.css?v=1.1">
         </head>
 
         <body>

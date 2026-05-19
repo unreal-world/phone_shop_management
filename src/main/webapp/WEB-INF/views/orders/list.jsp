@@ -4,20 +4,7 @@
 <html>
 <head>
     <title>Quản lý đơn hàng</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-        th { background-color: #f2f2f2; color: #333; }
-        .status-PENDING { color: #ffc107; font-weight: bold; }
-        .status-PROCESSING { color: #17a2b8; font-weight: bold; }
-        .status-COMPLETED { color: #28a745; font-weight: bold; }
-        .status-FAILED { color: #dc3545; font-weight: bold; }
-        .status-CANCELLED { color: #6c757d; font-weight: bold; }
-        .empty-orders { text-align: center; font-size: 18px; color: #666; margin-top: 50px; }
-        .btn-update { display: inline-block; padding: 6px 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        select { padding: 5px; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/orders.css?v=1.1">
 </head>
 <body>
     <h2>Quản lý toàn bộ đơn hàng (Admin)</h2>

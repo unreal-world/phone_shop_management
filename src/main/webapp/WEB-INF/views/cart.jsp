@@ -4,23 +4,7 @@
 <html>
 <head>
     <title>Giỏ hàng của bạn</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .cart-container { display: flex; gap: 20px; margin-top: 20px; }
-        .cart-items { flex: 2; }
-        .checkout-form { flex: 1; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; height: fit-content; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-        th { background-color: #f2f2f2; color: #333; }
-        .btn-update { background-color: #ffc107; color: #000; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
-        .btn-remove { background-color: #dc3545; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; display: inline-block; }
-        .btn-checkout { background-color: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 15px; font-weight: bold; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .total-price { font-size: 20px; font-weight: bold; color: #dc3545; margin-top: 15px; text-align: right; }
-        .empty-cart { text-align: center; font-size: 18px; color: #666; margin-top: 50px; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cart.css?v=1.1">
 </head>
 <body>
     <h2>Giỏ hàng của bạn</h2>

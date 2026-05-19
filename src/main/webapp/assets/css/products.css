@@ -2,49 +2,6 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
 }
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.nav-buttons a {
-    margin-left: 10px;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    color: white;
-}
-
-.btn-primary {
-    background-color: #007bff;
-}
-
-.btn-success {
-    background-color: #28a745;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
-.btn-info {
-    background-color: #17a2b8;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.main-content {
-    margin-top: 40px;
-    text-align: center;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -84,4 +41,3 @@ th {
     background-color: #dc3545;
     color: white;
 }
-
