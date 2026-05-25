@@ -51,6 +51,11 @@ public class WebConfig implements WebMvcConfigurer {
         return resolver;
     }
 
+    @Bean
+    public org.springframework.web.multipart.support.StandardServletMultipartResolver multipartResolver() {
+        return new org.springframework.web.multipart.support.StandardServletMultipartResolver();
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");

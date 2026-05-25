@@ -46,7 +46,7 @@ public class ImageDaoImpl implements ImageDao {
     @Override
     public void addImage(Image image) {
         String sql = "INSERT INTO Image (imageID, productID, imageSource) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, image.getImageID(), image.getImageSource());
+        jdbcTemplate.update(sql, image.getImageID(), image.getProductID(), image.getImageSource());
     }
 
     @Override

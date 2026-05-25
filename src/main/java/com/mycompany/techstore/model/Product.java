@@ -10,6 +10,7 @@ public class Product {
     private String description;
     private Integer stock_quantity;
     private List<Image> image;
+    private String primaryImage;
 
     // Constructors
     public Product() {}
@@ -78,5 +79,12 @@ public class Product {
     public void setImage(List<Image> image) {
         this.image = image;
     }
-    
+
+    public String getPrimaryImage() {
+        return primaryImage;
+    }
+
+    public void setPrimaryImage(String primaryImage) {
+        this.primaryImage = primaryImage;
+    }
 }

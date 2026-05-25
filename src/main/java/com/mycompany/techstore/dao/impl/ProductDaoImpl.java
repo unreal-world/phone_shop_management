@@ -19,15 +19,19 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM Product";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new Product(
+        String sql = "SELECT p.*, (SELECT imageSource FROM Image i WHERE i.productID = p.productID LIMIT 1) as primaryImage FROM Product p";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Product p = new Product(
                 rs.getString("productID"),
                 rs.getString("productName"),
                 rs.getString("brand"),
                 rs.getDouble("price"),
                 rs.getString("description"),
                 rs.getInt("stock_quantity")
-        ));
+            );
+            p.setPrimaryImage(rs.getString("primaryImage"));
+            return p;
+        });
     }
 
     @Override
@@ -44,35 +48,48 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void deleteProduct(String productID) {
+        // Xóa dữ liệu liên quan ở các bảng có khóa ngoại (Foreign Key) để tránh lỗi DataIntegrityViolationException
+        jdbcTemplate.update("DELETE FROM CartItem WHERE productID=?", productID);
+        jdbcTemplate.update("DELETE FROM OrderDetail WHERE productID=?", productID);
+        
+        // Sau đó mới xóa sản phẩm
         String sql = "DELETE FROM Product WHERE productID=?";
         jdbcTemplate.update(sql, productID);
     }
 
     @Override
     public Product getProductById(String productID) {
-        String sql = "SELECT * FROM Product WHERE productID=?";
-        List<Product> products = jdbcTemplate.query(sql, new Object[]{productID}, (rs, rowNum) -> new Product(
+        String sql = "SELECT p.*, (SELECT imageSource FROM Image i WHERE i.productID = p.productID LIMIT 1) as primaryImage FROM Product p WHERE p.productID=?";
+        List<Product> products = jdbcTemplate.query(sql, new Object[]{productID}, (rs, rowNum) -> {
+            Product p = new Product(
                 rs.getString("productID"),
                 rs.getString("productName"),
                 rs.getString("brand"),
                 rs.getDouble("price"),
                 rs.getString("description"),
                 rs.getInt("stock_quantity")
-        ));
+            );
+            p.setPrimaryImage(rs.getString("primaryImage"));
+            return p;
+        });
         return products.isEmpty() ? null : products.get(0);
     }
 
     @Override
     public List<Product> searchProducts(String keyword) {
-        String sql = "SELECT * FROM Product WHERE LOWER(productName) LIKE LOWER(?)";
+        String sql = "SELECT p.*, (SELECT imageSource FROM Image i WHERE i.productID = p.productID LIMIT 1) as primaryImage FROM Product p WHERE LOWER(p.productName) LIKE LOWER(?)";
         String searchPattern = "%" + keyword + "%";
-        return jdbcTemplate.query(sql, new Object[]{searchPattern}, (rs, rowNum) -> new Product(
+        return jdbcTemplate.query(sql, new Object[]{searchPattern}, (rs, rowNum) -> {
+            Product p = new Product(
                 rs.getString("productID"),
                 rs.getString("productName"),
                 rs.getString("brand"),
                 rs.getDouble("price"),
                 rs.getString("description"),
                 rs.getInt("stock_quantity")
-        ));
+            );
+            p.setPrimaryImage(rs.getString("primaryImage"));
+            return p;
+        });
     }
 }

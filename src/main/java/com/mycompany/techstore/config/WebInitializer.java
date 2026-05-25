@@ -15,4 +15,11 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     protected String[] getServletMappings() {
         return new String[] { "/" }; // Ánh xạ mọi yêu cầu bắt đầu từ /
     }
+
+    @Override
+    protected void customizeRegistration(jakarta.servlet.ServletRegistration.Dynamic registration) {
+        // Cấu hình upload file
+        // Tham số: location, maxFileSize, maxRequestSize, fileSizeThreshold
+        registration.setMultipartConfig(new jakarta.servlet.MultipartConfigElement("", 10485760, 20971520, 0));
+    }
 }

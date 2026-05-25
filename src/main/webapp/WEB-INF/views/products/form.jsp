@@ -12,7 +12,7 @@
     <div class="product-form-container">
         <h2>🛠️ Thông tin sản phẩm</h2>
         
-        <form:form action="${pageContext.request.contextPath}/products/save" method="post" modelAttribute="product">
+        <form:form action="${pageContext.request.contextPath}/products/save" method="post" modelAttribute="product" enctype="multipart/form-data">
             <form:hidden path="productID" />
             
             <div class="form-group">
@@ -38,6 +38,11 @@
             <div class="form-group">
                 <label for="stock_quantity">Số lượng tồn kho <span class="required">*</span></label>
                 <form:input path="stock_quantity" id="stock_quantity" type="number" required="required" placeholder="Nhập số lượng trong kho" />
+            </div>
+            
+            <div class="form-group">
+                <label for="productImage">Hình ảnh sản phẩm</label>
+                <input type="file" name="productImage" id="productImage" accept="image/*" />
             </div>
             
             <div class="form-actions">
