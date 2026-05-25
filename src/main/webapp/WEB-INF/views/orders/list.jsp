@@ -52,7 +52,7 @@
                             <td>${order.orderDate}</td>
                             <td>${order.receiver}</td>
                             <td>${order.phoneNumber}</td>
-                            <td>${order.shippingAddress}</td>
+                            <td>${order.fullShippingAddress}</td>
                             <td class="status-${order.orderStatus}">${order.orderStatus}</td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/orders/update-status" method="post" style="margin: 0; display: inline-flex; align-items: center; gap: 5px;">

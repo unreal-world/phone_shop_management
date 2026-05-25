@@ -36,7 +36,7 @@
                         <td>${order.orderDate}</td>
                         <td>${order.receiver}</td>
                         <td>${order.phoneNumber}</td>
-                        <td>${order.shippingAddress}</td>
+                        <td>${order.fullShippingAddress}</td>
                         <td class="status-${order.orderStatus}">${order.orderStatus}</td>
                     </tr>
                 </c:forEach>

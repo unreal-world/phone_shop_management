@@ -141,7 +141,7 @@ public class CartController {
             return "redirect:/cart";
         }
 
-        String finalShippingAddress = "";
+        Address finalAddress = null;
         
         if ("new".equals(selectedAddressId)) {
             Address newAddress = new Address();
@@ -152,12 +152,9 @@ public class CartController {
             newAddress.setStreet(street);
             newAddress.setHouseNumber(houseNumber);
             addressService.saveAddress(newAddress);
-            finalShippingAddress = houseNumber + ", " + street + ", " + ward + ", " + city;
+            finalAddress = newAddress;
         } else {
-            Address existingAddress = addressService.getAddressById(selectedAddressId);
-            if (existingAddress != null) {
-                finalShippingAddress = existingAddress.getHouseNumber() + ", " + existingAddress.getStreet() + ", " + existingAddress.getWard() + ", " + existingAddress.getCity();
-            }
+            finalAddress = addressService.getAddressById(selectedAddressId);
         }
 
         // Create Order
@@ -165,7 +162,7 @@ public class CartController {
         order.setOrderID(UUID.randomUUID().toString());
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.PENDING);
-        order.setShippingAddress(finalShippingAddress);
+        order.setAddress(finalAddress);
         order.setReceiver(receiver);
         order.setPhoneNumber(phoneNumber);
         order.setUserID(user.getUserID());

@@ -6,18 +6,18 @@ public class Order {
     private String orderID;
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
-    private String shippingAddress;
+    private Address address;
     private String receiver;
     private String phoneNumber;
     private String userID;
 
     public Order() {}
 
-    public Order(String orderID, LocalDateTime orderDate, OrderStatus orderStatus, String shippingAddress, String receiver, String phoneNumber, String userID) {
+    public Order(String orderID, LocalDateTime orderDate, OrderStatus orderStatus, Address address, String receiver, String phoneNumber, String userID) {
         this.orderID = orderID;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
-        this.shippingAddress = shippingAddress;
+        this.address = address;
         this.receiver = receiver;
         this.phoneNumber = phoneNumber;
         this.userID = userID;
@@ -47,12 +47,19 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public String getShippingAddress() {
-        return shippingAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getFullShippingAddress() {
+        if (address != null) {
+            return address.getHouseNumber() + ", " + address.getStreet() + ", " + address.getWard() + ", " + address.getCity();
+        }
+        return "N/A";
     }
 
     public String getReceiver() {
