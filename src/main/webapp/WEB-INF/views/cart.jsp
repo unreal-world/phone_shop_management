@@ -102,7 +102,8 @@
                             </c:if>
 
                             <!-- Form nhập địa chỉ mới (sẽ bị ẩn nếu chọn địa chỉ cũ) -->
-                            <div id="newAddressForm" style="${not empty userAddresses ? 'display: none;' : ''}">
+                               <div id="newAddressForm"
+                                   <c:if test="${not empty userAddresses}">style="display: none;"</c:if>>
                                 <div style="margin-bottom: 10px;">
                                     <input type="text" name="city" placeholder="Thành phố/Tỉnh" style="width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" ${empty userAddresses ? 'required' : ''}>
                                     <input type="text" name="ward" placeholder="Phường/Xã" style="width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" ${empty userAddresses ? 'required' : ''}>
