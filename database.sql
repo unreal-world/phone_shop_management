@@ -65,10 +65,11 @@ CREATE TABLE `Order` (
     userID VARCHAR(50),
     orderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     orderStatus ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED') NOT NULL,
-    shippingAddress TEXT,
+    addressID VARCHAR(50),
     receiver VARCHAR(100),
     phoneNumber VARCHAR(15),
-    FOREIGN KEY (userID) REFERENCES User(userID)
+    FOREIGN KEY (userID) REFERENCES User(userID),
+    FOREIGN KEY (addressID) REFERENCES Address(addressID)
 );
 
 -- 9. Bảng OrderDetail (Quan hệ n-1 với Order và n-1 với Product)
@@ -81,4 +82,4 @@ CREATE TABLE OrderDetail (
     totalPrice DOUBLE NOT NULL,
     FOREIGN KEY (orderID) REFERENCES `Order`(orderID) ON DELETE CASCADE,
     FOREIGN KEY (productID) REFERENCES Product(productID)
-);address
+);
