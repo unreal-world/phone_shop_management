@@ -44,4 +44,9 @@ public class AddressServiceImpl implements AddressService {
     public void deleteAddress(String addressID) {
         addressDao.deleteAddress(addressID);
     }
+
+    @Override
+    public void addAddress(Address newAddress) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

@@ -22,6 +22,7 @@ public class AddressDaoImpl implements AddressDao {
         String sql = "SELECT * FROM Address";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Address(
                 rs.getString("addressID"),
+                rs.getString("userID"),
                 rs.getString("city"),
                 rs.getString("ward"),
                 rs.getString("street"),
@@ -34,6 +35,7 @@ public class AddressDaoImpl implements AddressDao {
         String sql = "SELECT * FROM Address WHERE addressID = ?";
         List<Address> addresses = jdbcTemplate.query(sql, new Object[]{addressID}, (rs, rowNum) -> new Address(
                 rs.getString("addressID"),
+                rs.getString("userID"),
                 rs.getString("city"),
                 rs.getString("ward"),
                 rs.getString("street"),
@@ -47,6 +49,7 @@ public class AddressDaoImpl implements AddressDao {
         String sql = "SELECT * FROM Address WHERE userID = ?";
         return jdbcTemplate.query(sql, new Object[]{userID}, (rs, rowNum) -> new Address(
                 rs.getString("addressID"),
+                rs.getString("userID"),
                 rs.getString("city"),
                 rs.getString("ward"),
                 rs.getString("street"),
@@ -56,14 +59,14 @@ public class AddressDaoImpl implements AddressDao {
 
     @Override
     public void addAddress(Address address) {
-        String sql = "INSERT INTO Address (addressID, city, ward, street, houseNumber) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, address.getAddressID(), address.getCity(), address.getWard(), address.getStreet(), address.getHouseNumber());
+        String sql = "INSERT INTO Address (addressID, userID, city, ward, street, houseNumber) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, address.getAddressID(), address.getUserID(), address.getCity(), address.getWard(), address.getStreet(), address.getHouseNumber());
     }
 
     @Override
     public void updateAddress(Address address) {
-        String sql = "UPDATE Address SET city=?, ward=?, street=?, houseNumber=? WHERE addressID=?";
-        jdbcTemplate.update(sql, address.getCity(), address.getWard(), address.getStreet(), address.getHouseNumber(), address.getAddressID());
+        String sql = "UPDATE Address SET userID=?, city=?, ward=?, street=?, houseNumber=? WHERE addressID=?";
+        jdbcTemplate.update(sql, address.getUserID(), address.getCity(), address.getWard(), address.getStreet(), address.getHouseNumber(), address.getAddressID());
     }
 
     @Override

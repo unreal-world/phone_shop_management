@@ -8,6 +8,8 @@ import com.mycompany.techstore.model.User;
 import com.mycompany.techstore.service.OrderDetailService;
 import com.mycompany.techstore.service.OrderService;
 import com.mycompany.techstore.service.ProductService;
+import com.mycompany.techstore.service.AddressService;
+import com.mycompany.techstore.model.Address;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class CartController {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @Autowired
+    private AddressService addressService;
+
     // View cart
     @GetMapping
     public String viewCart(HttpSession session, Model model) {
@@ -54,6 +59,12 @@ public class CartController {
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("total", total);
+
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user != null) {
+            model.addAttribute("userAddresses", addressService.getAddressesByUserId(user.getUserID()));
+        }
+
         return "cart";
     }
 
@@ -111,7 +122,11 @@ public class CartController {
     @PostMapping("/checkout")
     public String checkout(@RequestParam("receiver") String receiver,
                            @RequestParam("phoneNumber") String phoneNumber,
-                           @RequestParam("shippingAddress") String shippingAddress,
+                           @RequestParam("selectedAddressId") String selectedAddressId,
+                           @RequestParam(value = "city", required = false) String city,
+                           @RequestParam(value = "ward", required = false) String ward,
+                           @RequestParam(value = "street", required = false) String street,
+                           @RequestParam(value = "houseNumber", required = false) String houseNumber,
                            HttpSession session,
                            RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("loggedInUser");
@@ -126,12 +141,31 @@ public class CartController {
             return "redirect:/cart";
         }
 
+        String finalShippingAddress = "";
+        
+        if ("new".equals(selectedAddressId)) {
+            Address newAddress = new Address();
+            newAddress.setAddressID(UUID.randomUUID().toString());
+            newAddress.setUserID(user.getUserID());
+            newAddress.setCity(city);
+            newAddress.setWard(ward);
+            newAddress.setStreet(street);
+            newAddress.setHouseNumber(houseNumber);
+            addressService.saveAddress(newAddress);
+            finalShippingAddress = houseNumber + ", " + street + ", " + ward + ", " + city;
+        } else {
+            Address existingAddress = addressService.getAddressById(selectedAddressId);
+            if (existingAddress != null) {
+                finalShippingAddress = existingAddress.getHouseNumber() + ", " + existingAddress.getStreet() + ", " + existingAddress.getWard() + ", " + existingAddress.getCity();
+            }
+        }
+
         // Create Order
         Order order = new Order();
         order.setOrderID(UUID.randomUUID().toString());
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.PENDING);
-        order.setShippingAddress(shippingAddress);
+        order.setShippingAddress(finalShippingAddress);
         order.setReceiver(receiver);
         order.setPhoneNumber(phoneNumber);
         order.setUserID(user.getUserID());

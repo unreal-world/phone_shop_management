@@ -2,6 +2,7 @@ package com.mycompany.techstore.model;
 
 public class Address {
     private String addressID;
+    private String userID;
     private String city;
     private String ward;
     private String street;
@@ -9,8 +10,9 @@ public class Address {
 
     public Address() {}
 
-    public Address(String addressID, String city, String ward, String street, String houseNumber) {
+    public Address(String addressID, String userID, String city, String ward, String street, String houseNumber) {
         this.addressID = addressID;
+        this.userID = userID;
         this.city = city;
         this.ward = ward;
         this.street = street;
@@ -55,5 +57,13 @@ public class Address {
 
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }
