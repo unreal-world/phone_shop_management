@@ -38,7 +38,7 @@ CREATE TABLE Product (
 CREATE TABLE Image (
     imageID VARCHAR(50) PRIMARY KEY,
     productID VARCHAR(50),
-    imageSource VARCHAR(255),
+    imageSource LONGTEXT,
     FOREIGN KEY (productID) REFERENCES Product(productID) ON DELETE CASCADE
 );
 
