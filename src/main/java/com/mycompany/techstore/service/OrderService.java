@@ -8,6 +8,7 @@ public interface OrderService {
     List<Order> getAllOrders();
     Order getOrderById(String orderID);
     List<Order> getOrdersByUserId(String userID);
+    List<String> getProductImagesForOrder(String orderID);
     void saveOrder(Order order);
     void updateOrder(Order order);
     void deleteOrder(String orderID);

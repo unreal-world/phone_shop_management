@@ -79,7 +79,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> getOrdersByUserId(String userID) {
         String sql = "SELECT o.*, a.userID AS a_userID, a.city, a.ward, a.street, a.houseNumber " +
-                     "FROM `Order` o LEFT JOIN Address a ON o.addressID = a.addressID WHERE o.userID = ?";
+                     "FROM `Order` o LEFT JOIN Address a ON o.addressID = a.addressID WHERE o.userID = ? ORDER BY o.orderDate DESC";
         return jdbcTemplate.query(sql, new Object[]{userID}, (rs, rowNum) -> {
             Address address = null;
             if (rs.getString("addressID") != null) {
@@ -102,6 +102,18 @@ public class OrderDaoImpl implements OrderDao {
                     rs.getString("userID")
             );
         });
+    }
+
+    @Override
+    public List<String> getProductImagesForOrder(String orderID) {
+        String sql = "SELECT DISTINCT (SELECT i.imageSource FROM Image i WHERE i.productID = od.productID LIMIT 1) as primaryImage " +
+                     "FROM OrderDetail od " +
+                     "WHERE od.orderID = ?";
+        List<String> images = jdbcTemplate.query(sql, new Object[]{orderID}, (rs, rowNum) -> rs.getString("primaryImage"));
+        if (images != null) {
+            images.removeIf(img -> img == null || img.trim().isEmpty());
+        }
+        return images;
     }
 
     @Override

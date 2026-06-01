@@ -66,7 +66,14 @@ public class OrderController {
 
     @GetMapping("/user/{userID}")
     public String getOrdersByUser(@PathVariable("userID") String userID, Model model) {
-        model.addAttribute("orders", orderService.getOrdersByUserId(userID));
+        java.util.List<Order> orders = orderService.getOrdersByUserId(userID);
+        model.addAttribute("orders", orders);
+        
+        java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
+        for (Order order : orders) {
+            orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
+        }
+        model.addAttribute("orderImages", orderImages);
         return "orders/user-orders";
     }
 
@@ -82,7 +89,14 @@ public class OrderController {
         if (user == null) {
             return "redirect:/auth/login";
         }
-        model.addAttribute("orders", orderService.getOrdersByUserId(user.getUserID()));
+        java.util.List<Order> orders = orderService.getOrdersByUserId(user.getUserID());
+        model.addAttribute("orders", orders);
+        
+        java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
+        for (Order order : orders) {
+            orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
+        }
+        model.addAttribute("orderImages", orderImages);
         return "orders/user-orders";
     }
 

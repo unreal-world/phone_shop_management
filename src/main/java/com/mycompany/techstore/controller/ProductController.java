@@ -50,11 +50,18 @@ public class ProductController {
                 String base64Image = Base64.getEncoder().encodeToString(productImage.getBytes());
                 String imageString = "data:" + productImage.getContentType() + ";base64," + base64Image;
 
-                Image img = new Image();
-                img.setImageID(java.util.UUID.randomUUID().toString());
-                img.setProductID(product.getProductID());
-                img.setImageSource(imageString); 
-                imageDao.addImage(img);
+                java.util.List<Image> existingImages = imageDao.getImagesByProductId(product.getProductID());
+                if (existingImages != null && !existingImages.isEmpty()) {
+                    Image img = existingImages.get(0);
+                    img.setImageSource(imageString);
+                    imageDao.updateImage(img);
+                } else {
+                    Image img = new Image();
+                    img.setImageID(java.util.UUID.randomUUID().toString());
+                    img.setProductID(product.getProductID());
+                    img.setImageSource(imageString); 
+                    imageDao.addImage(img);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

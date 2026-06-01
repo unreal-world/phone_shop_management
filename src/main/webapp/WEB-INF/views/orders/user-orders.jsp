@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Đơn hàng của tôi</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/orders.css?v=1.1">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/orders.css?v=1.2">
 </head>
 <body>
     <h2>Đơn hàng của tôi</h2>
@@ -23,7 +23,7 @@
         <c:otherwise>
             <table>
                 <tr>
-                    <th>Mã đơn hàng</th>
+                    <th style="width: 100px;">Hình ảnh sản phẩm</th>
                     <th>Ngày đặt</th>
                     <th>Người nhận</th>
                     <th>SĐT</th>
@@ -32,7 +32,13 @@
                 </tr>
                 <c:forEach var="order" items="${orders}">
                     <tr>
-                        <td>${order.orderID}</td>
+                        <td>
+                            <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                                <c:forEach var="imgSrc" items="${orderImages[order.orderID]}">
+                                    <img src="${imgSrc}" style="width: 35px !important; height: 35px !important; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;" alt="Sản phẩm" />
+                                </c:forEach>
+                            </div>
+                        </td>
                         <td>${order.orderDate}</td>
                         <td>${order.receiver}</td>
                         <td>${order.phoneNumber}</td>

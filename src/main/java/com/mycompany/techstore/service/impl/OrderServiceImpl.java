@@ -31,6 +31,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<String> getProductImagesForOrder(String orderID) {
+        return orderDao.getProductImagesForOrder(orderID);
+    }
+
+    @Override
     public void saveOrder(Order order) {
         orderDao.addOrder(order);
     }

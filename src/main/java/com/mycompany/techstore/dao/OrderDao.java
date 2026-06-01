@@ -8,6 +8,7 @@ public interface OrderDao {
     List<Order> getAllOrders();
     Order getOrderById(String orderID);
     List<Order> getOrdersByUserId(String userID);
+    List<String> getProductImagesForOrder(String orderID);
     void addOrder(Order order);
     void updateOrder(Order order);
     void deleteOrder(String orderID);
