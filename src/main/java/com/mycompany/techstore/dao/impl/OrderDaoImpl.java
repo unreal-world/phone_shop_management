@@ -117,6 +117,22 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public List<String> getProductNamesForOrder(String orderID) {
+        String sql = "SELECT DISTINCT p.productName " +
+                     "FROM OrderDetail od " +
+                     "JOIN Product p ON od.productID = p.productID " +
+                     "WHERE od.orderID = ?";
+        return jdbcTemplate.query(sql, new Object[]{orderID}, (rs, rowNum) -> rs.getString("productName"));
+    }
+
+    @Override
+    public double getOrderTotalValue(String orderID) {
+        String sql = "SELECT COALESCE(SUM(od.totalPrice), 0.0) FROM OrderDetail od WHERE od.orderID = ?";
+        Double total = jdbcTemplate.queryForObject(sql, new Object[]{orderID}, Double.class);
+        return total != null ? total : 0.0;
+    }
+
+    @Override
     public void addOrder(Order order) {
         String sql = "INSERT INTO `Order` (orderID, userID, orderDate, orderStatus, addressID, receiver, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String addressID = order.getAddress() != null ? order.getAddress().getAddressID() : null;

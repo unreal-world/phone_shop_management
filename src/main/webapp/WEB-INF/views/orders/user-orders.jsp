@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +25,8 @@
             <table>
                 <tr>
                     <th style="width: 100px;">Hình ảnh sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá trị đơn hàng</th>
                     <th>Ngày đặt</th>
                     <th>Người nhận</th>
                     <th>SĐT</th>
@@ -39,6 +42,8 @@
                                 </c:forEach>
                             </div>
                         </td>
+                        <td>${orderProductNames[order.orderID]}</td>
+                        <td style="color: #e44d26; font-weight: bold;"><fmt:formatNumber value="${orderTotals[order.orderID]}" pattern="#,##0"/> VNĐ</td>
                         <td>${order.orderDate}</td>
                         <td>${order.receiver}</td>
                         <td>${order.phoneNumber}</td>

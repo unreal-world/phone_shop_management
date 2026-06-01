@@ -70,10 +70,17 @@ public class OrderController {
         model.addAttribute("orders", orders);
         
         java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
+        java.util.Map<String, String> orderProductNames = new java.util.HashMap<>();
+        java.util.Map<String, Double> orderTotals = new java.util.HashMap<>();
         for (Order order : orders) {
             orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
+            java.util.List<String> names = orderService.getProductNamesForOrder(order.getOrderID());
+            orderProductNames.put(order.getOrderID(), String.join(", ", names));
+            orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
         model.addAttribute("orderImages", orderImages);
+        model.addAttribute("orderProductNames", orderProductNames);
+        model.addAttribute("orderTotals", orderTotals);
         return "orders/user-orders";
     }
 
@@ -93,10 +100,17 @@ public class OrderController {
         model.addAttribute("orders", orders);
         
         java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
+        java.util.Map<String, String> orderProductNames = new java.util.HashMap<>();
+        java.util.Map<String, Double> orderTotals = new java.util.HashMap<>();
         for (Order order : orders) {
             orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
+            java.util.List<String> names = orderService.getProductNamesForOrder(order.getOrderID());
+            orderProductNames.put(order.getOrderID(), String.join(", ", names));
+            orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
         model.addAttribute("orderImages", orderImages);
+        model.addAttribute("orderProductNames", orderProductNames);
+        model.addAttribute("orderTotals", orderTotals);
         return "orders/user-orders";
     }
 

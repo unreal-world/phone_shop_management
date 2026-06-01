@@ -36,6 +36,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<String> getProductNamesForOrder(String orderID) {
+        return orderDao.getProductNamesForOrder(orderID);
+    }
+
+    @Override
+    public double getOrderTotalValue(String orderID) {
+        return orderDao.getOrderTotalValue(orderID);
+    }
+
+    @Override
     public void saveOrder(Order order) {
         orderDao.addOrder(order);
     }
