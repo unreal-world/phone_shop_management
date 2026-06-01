@@ -16,20 +16,16 @@ th {
     background-color: #f2f2f2;
     color: #333;
 }
-.status-PENDING {
-    color: #ffc107;
-    font-weight: bold;
-}
 .status-PROCESSING {
     color: #17a2b8;
     font-weight: bold;
 }
-.status-COMPLETED {
-    color: #28a745;
+.status-DELIVERING {
+    color: #ff8c00;
     font-weight: bold;
 }
-.status-FAILED {
-    color: #dc3545;
+.status-DELIVERED {
+    color: #28a745;
     font-weight: bold;
 }
 .status-CANCELLED {

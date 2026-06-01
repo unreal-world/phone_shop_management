@@ -161,7 +161,7 @@ public class CartController {
         Order order = new Order();
         order.setOrderID(UUID.randomUUID().toString());
         order.setOrderDate(LocalDateTime.now());
-        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         order.setAddress(finalAddress);
         order.setReceiver(receiver);
         order.setPhoneNumber(phoneNumber);

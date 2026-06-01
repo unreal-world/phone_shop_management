@@ -58,11 +58,10 @@
                                 <form action="${pageContext.request.contextPath}/orders/update-status" method="post" style="margin: 0; display: inline-flex; align-items: center; gap: 5px;">
                                     <input type="hidden" name="orderID" value="${order.orderID}">
                                     <select name="status">
-                                        <option value="PENDING" ${order.orderStatus == 'PENDING' ? 'selected' : ''}>PENDING</option>
                                         <option value="PROCESSING" ${order.orderStatus == 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
-                                        <option value="COMPLETED" ${order.orderStatus == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                                        <option value="DELIVERING" ${order.orderStatus == 'DELIVERING' ? 'selected' : ''}>DELIVERING</option>
+                                        <option value="DELIVERED" ${order.orderStatus == 'DELIVERED' ? 'selected' : ''}>DELIVERED</option>
                                         <option value="CANCELLED" ${order.orderStatus == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
-                                        <option value="FAILED" ${order.orderStatus == 'FAILED' ? 'selected' : ''}>FAILED</option>
                                     </select>
                                     <button type="submit" class="btn-update">Lưu</button>
                                 </form>
