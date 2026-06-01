@@ -32,6 +32,7 @@
                 <div class="cart-items">
                     <table>
                         <tr>
+                            <th>Hình ảnh</th>
                             <th>Tên sản phẩm</th>
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
@@ -40,6 +41,16 @@
                         </tr>
                         <c:forEach var="entry" items="${cartItems}">
                             <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty entry.key.primaryImage}">
+                                            <img src="${entry.key.primaryImage}" alt="${entry.key.productName}" style="max-width: 60px; height: 60px; object-fit: contain; border-radius: 4px;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div style="width: 60px; height: 60px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #999; border-radius: 4px; font-size: 10px;">Không có ảnh</div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td>${entry.key.productName}</td>
                                 <td><fmt:formatNumber value="${entry.key.price}" pattern="#,##0"/></td>
                                 <td>

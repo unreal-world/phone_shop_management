@@ -86,8 +86,18 @@
                                     
                                     <h3 style="font-size: 18px; margin: 0 0 10px; color: #333; height: 40px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.productName}</h3>
                                     <p style="color: #666; margin: 0 0 5px; font-size: 14px;">Hãng: ${p.brand}</p>
+                                    <p style="color: #555; margin: 0 0 10px; font-size: 13px; height: 36px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;" title="${p.description}">Mô tả: ${p.description}</p>
                                     <p style="color: #e44d26; font-weight: bold; font-size: 18px; margin: 0 0 10px;"><fmt:formatNumber value="${p.price}" pattern="#,##0"/> VNĐ</p>
-                                    <p style="color: #666; margin: 0 0 15px; font-size: 13px;">Còn lại: ${p.stock_quantity}</p>
+                                    <p style="color: ${p.stock_quantity == 0 ? '#dc3545' : '#666'}; margin: 0 0 15px; font-size: 13px; font-weight: ${p.stock_quantity == 0 ? 'bold' : 'normal'};">
+                                        <c:choose>
+                                            <c:when test="${p.stock_quantity == 0}">
+                                                Hết hàng
+                                            </c:when>
+                                            <c:otherwise>
+                                                Còn lại: ${p.stock_quantity}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
                                     
                                     <div class="product-actions">
                                         <c:choose>
@@ -100,7 +110,14 @@
                                                 <form action="${pageContext.request.contextPath}/cart/add" method="post" style="margin: 0; display: flex; align-items: center; justify-content: center; width: 100%;">
                                                     <input type="hidden" name="productId" value="${p.productID}">
                                                     <input type="hidden" name="quantity" value="1">
-                                                    <button type="submit" class="btn-add" style="width: 100%; padding: 8px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;">Thêm vào giỏ hàng</button>
+                                                    <c:choose>
+                                                        <c:when test="${p.stock_quantity == 0}">
+                                                            <button type="button" class="btn-add" disabled style="width: 100%; padding: 8px 12px; font-size: 14px; background-color: #cccccc; color: #666666; border: none; border-radius: 4px; cursor: not-allowed; pointer-events: none;">Thêm vào giỏ hàng</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button type="submit" class="btn-add" style="width: 100%; padding: 8px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;">Thêm vào giỏ hàng</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </form>
                                             </c:otherwise>
                                         </c:choose>
