@@ -11,6 +11,7 @@ public class Product {
     private Integer stock_quantity;
     private List<Image> image;
     private String primaryImage;
+    private boolean isDeleted;
 
     // Constructors
     public Product() {}
@@ -86,5 +87,13 @@ public class Product {
 
     public void setPrimaryImage(String primaryImage) {
         this.primaryImage = primaryImage;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

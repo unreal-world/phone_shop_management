@@ -30,6 +30,7 @@ public class ProductDaoImpl implements ProductDao {
                 rs.getInt("stock_quantity")
             );
             p.setPrimaryImage(rs.getString("primaryImage"));
+            p.setIsDeleted(rs.getBoolean("isDeleted"));
             return p;
         });
     }
@@ -48,12 +49,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void deleteProduct(String productID) {
-        // Xóa dữ liệu liên quan ở các bảng có khóa ngoại (Foreign Key) để tránh lỗi DataIntegrityViolationException
-        jdbcTemplate.update("DELETE FROM CartItem WHERE productID=?", productID);
-        jdbcTemplate.update("DELETE FROM OrderDetail WHERE productID=?", productID);
-        
-        // Sau đó mới xóa sản phẩm
-        String sql = "DELETE FROM Product WHERE productID=?";
+        String sql = "UPDATE Product SET isDeleted = 1 WHERE productID = ?";
         jdbcTemplate.update(sql, productID);
     }
 
@@ -70,6 +66,7 @@ public class ProductDaoImpl implements ProductDao {
                 rs.getInt("stock_quantity")
             );
             p.setPrimaryImage(rs.getString("primaryImage"));
+            p.setIsDeleted(rs.getBoolean("isDeleted"));
             return p;
         });
         return products.isEmpty() ? null : products.get(0);
@@ -89,6 +86,7 @@ public class ProductDaoImpl implements ProductDao {
                 rs.getInt("stock_quantity")
             );
             p.setPrimaryImage(rs.getString("primaryImage"));
+            p.setIsDeleted(rs.getBoolean("isDeleted"));
             return p;
         });
     }

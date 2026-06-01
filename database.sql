@@ -31,7 +31,8 @@ CREATE TABLE Product (
     brand VARCHAR(100),
     price DOUBLE NOT NULL,
     stock_quantity INT DEFAULT 0,
-    description TEXT
+    description TEXT,
+    isDeleted BOOLEAN DEFAULT FALSE
 );
 
 

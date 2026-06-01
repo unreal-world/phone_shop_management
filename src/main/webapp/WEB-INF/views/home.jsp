@@ -74,7 +74,10 @@
 
                         <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
                             <c:forEach var="p" items="${products}">
-                                <div class="product-card" style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                <div class="product-card" style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; ${p.isDeleted ? 'opacity: 0.55; filter: grayscale(40%);' : ''}">
+                                    <c:if test="${p.isDeleted}">
+                                        <div style="background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Đã ẩn với khách</div>
+                                    </c:if>
                                     <c:choose>
                                         <c:when test="${not empty p.primaryImage}">
                                             <img src="${p.primaryImage}" alt="${p.productName}" style="max-width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px;">
