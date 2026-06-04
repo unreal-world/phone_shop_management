@@ -74,6 +74,12 @@ public class CartController {
                             @RequestParam(value = "quantity", defaultValue = "1") int quantity,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thêm sản phẩm vào giỏ hàng.");
+            return "redirect:/auth/login";
+        }
+        
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart == null) {
             cart = new HashMap<>();
