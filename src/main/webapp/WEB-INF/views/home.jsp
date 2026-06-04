@@ -24,6 +24,7 @@
                             </c:if>
                             <c:if test="${sessionScope.loggedInUser.role == 'ADMIN'}">
                                 <a href="${pageContext.request.contextPath}/orders/list" class="btn-success" style="background-color: #007bff; margin-left: 10px;">Quản lý Đơn hàng</a>
+                                <a href="${pageContext.request.contextPath}/statistics" class="btn-info" style="margin-left: 10px;">Thống kê</a>
                             </c:if>
                             <a href="${pageContext.request.contextPath}/auth/logout" class="btn-danger" style="margin-left: 10px;">Đăng xuất</a>
                         </c:when>
