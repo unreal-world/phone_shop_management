@@ -11,6 +11,7 @@ import com.mycompany.techstore.service.ProductService;
 import com.mycompany.techstore.service.AddressService;
 import com.mycompany.techstore.model.Address;
 import com.mycompany.techstore.factory.payment.PaymentProcessor;
+import com.mycompany.techstore.factory.payment.PaymentProcessorCreator;
 import com.mycompany.techstore.factory.payment.PaymentProcessorFactory;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,10 +202,11 @@ public class CartController {
             }
         }
 
-        // Process payment via Factory
+        // Process payment via Factory Method Pattern
         String paymentMessage;
         try {
-            PaymentProcessor processor = PaymentProcessorFactory.getPaymentProcessor(paymentMethod);
+            PaymentProcessorCreator creator = PaymentProcessorFactory.getCreator(paymentMethod);
+            PaymentProcessor processor = creator.createPaymentProcessor();
             paymentMessage = processor.processPayment(order, total);
         } catch (IllegalArgumentException e) {
             paymentMessage = "Đặt hàng thành công, nhưng không thể xử lý thanh toán: " + e.getMessage();
