@@ -10,6 +10,8 @@ import com.mycompany.techstore.service.OrderService;
 import com.mycompany.techstore.service.ProductService;
 import com.mycompany.techstore.service.AddressService;
 import com.mycompany.techstore.model.Address;
+import com.mycompany.techstore.factory.payment.PaymentProcessor;
+import com.mycompany.techstore.factory.payment.PaymentProcessorFactory;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -133,6 +135,7 @@ public class CartController {
                            @RequestParam(value = "ward", required = false) String ward,
                            @RequestParam(value = "street", required = false) String street,
                            @RequestParam(value = "houseNumber", required = false) String houseNumber,
+                           @RequestParam("paymentMethod") String paymentMethod,
                            HttpSession session,
                            RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("loggedInUser");
@@ -175,7 +178,8 @@ public class CartController {
         
         orderService.saveOrder(order);
 
-        // Create OrderDetails
+        // Create OrderDetails and calculate total
+        double total = 0.0;
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             Product product = productService.getProductById(entry.getKey());
             if (product != null) {
@@ -189,16 +193,27 @@ public class CartController {
                 
                 orderDetailService.saveOrderDetail(detail);
                 
+                total += product.getPrice() * entry.getValue();
+                
                 // Optional: Reduce stock_quantity
                 product.setStock_quantity(product.getStock_quantity() - entry.getValue());
                 productService.updateProduct(product);
             }
         }
 
+        // Process payment via Factory
+        String paymentMessage;
+        try {
+            PaymentProcessor processor = PaymentProcessorFactory.getPaymentProcessor(paymentMethod);
+            paymentMessage = processor.processPayment(order, total);
+        } catch (IllegalArgumentException e) {
+            paymentMessage = "Đặt hàng thành công, nhưng không thể xử lý thanh toán: " + e.getMessage();
+        }
+
         // Clear cart
         session.removeAttribute("cart");
         
-        redirectAttributes.addFlashAttribute("successMessage", "Đặt hàng thành công! Mã đơn hàng: " + order.getOrderID());
+        redirectAttributes.addFlashAttribute("successMessage", "Đặt hàng thành công! Mã đơn hàng: " + order.getOrderID() + ". " + paymentMessage);
         return "redirect:/";
     }
 }

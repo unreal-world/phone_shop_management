@@ -140,8 +140,12 @@
                             }
                         </script>
                         <div class="form-group">
-                            <label>Phương thức thanh toán:</label>
-                            <input type="text" value="Thanh toán khi nhận hàng (COD)" disabled style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: #e9ecef; color: #495057; cursor: not-allowed;">
+                            <label for="paymentMethod">Phương thức thanh toán:</label>
+                            <select id="paymentMethod" name="paymentMethod" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: #fff; font-family: inherit;">
+                                <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                                <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                                <option value="MOMO">Ví điện tử MoMo</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn-checkout">Xác nhận thanh toán</button>
                     </form>
