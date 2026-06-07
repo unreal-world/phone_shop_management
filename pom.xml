@@ -63,7 +63,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>techstore</finalName>
+        <finalName>phonestore</finalName>
     </build>
     <name>phone_shop_management</name>
 </project>
