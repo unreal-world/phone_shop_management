@@ -257,3 +257,29 @@ body {
 .metric-card:nth-child(4) { animation-delay: 0.2s; }
 .dashboard-details > div:nth-child(1) { animation-delay: 0.25s; }
 .dashboard-details > div:nth-child(2) { animation-delay: 0.3s; }
+
+/* Export Buttons Styling */
+.btn-export-excel {
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    background-color: rgba(16, 185, 129, 0.05) !important;
+}
+
+.btn-export-excel:hover {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    border-color: var(--color-success) !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-export-pdf {
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+.btn-export-pdf:hover {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    border-color: var(--color-danger) !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+

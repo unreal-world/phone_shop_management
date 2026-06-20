@@ -1,6 +1,8 @@
 package com.mycompany.phonestore.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.mycompany.phonestore.model.User;
 import com.mycompany.phonestore.model.UserRole;
 import com.mycompany.phonestore.service.StatisticsService;
+import com.mycompany.phonestore.template.report.StatisticsReportTemplate;
+import com.mycompany.phonestore.template.report.ExcelStatisticsReport;
+import com.mycompany.phonestore.template.report.PdfStatisticsReport;
 
 @Controller
 public class StatisticsController {
@@ -57,5 +62,29 @@ public class StatisticsController {
         model.addAttribute("cancelledRevenue", cancelledRevenue);
 
         return "statistics";
+    }
+
+    @GetMapping("/statistics/export/excel")
+    public String exportExcel(HttpSession session, HttpServletResponse response) throws IOException {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || loggedInUser.getRole() != UserRole.ADMIN) {
+            return "redirect:/";
+        }
+
+        StatisticsReportTemplate report = new ExcelStatisticsReport(statisticsService);
+        report.exportReport(response, "Bao_Cao_Thong_Ke_Cua_Hang_" + System.currentTimeMillis() + ".csv");
+        return null;
+    }
+
+    @GetMapping("/statistics/export/pdf")
+    public String exportPdf(HttpSession session, HttpServletResponse response) throws IOException {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || loggedInUser.getRole() != UserRole.ADMIN) {
+            return "redirect:/";
+        }
+
+        StatisticsReportTemplate report = new PdfStatisticsReport(statisticsService);
+        report.exportReport(response, "Bao_Cao_Thong_Ke_Cua_Hang_" + System.currentTimeMillis() + ".html");
+        return null;
     }
 }
