@@ -5,15 +5,25 @@ import com.mycompany.phonestore.model.Order;
 import com.mycompany.phonestore.service.OrderService;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.mycompany.phonestore.observer.ConcreteObserver.AdminObserver;
+import com.mycompany.phonestore.observer.ConcreteObserver.CustomerObserver;
+import com.mycompany.phonestore.observer.ConcreteSubject.OrderNotificationSubject;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderDao orderDao;
 
+    private final OrderNotificationSubject orderSubject;
+
     public OrderServiceImpl(OrderDao orderDao) {
-        this.orderDao = orderDao;
-    }
+    this.orderDao = orderDao;
+
+    this.orderSubject = new OrderNotificationSubject();
+
+    this.orderSubject.addObserver(new AdminObserver());
+    this.orderSubject.addObserver(new CustomerObserver());
+}
 
     @Override
     public List<Order> getAllOrders() {
@@ -47,8 +57,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void saveOrder(Order order) {
-        orderDao.addOrder(order);
-    }
+
+    orderDao.addOrder(order);
+
+    orderSubject.notifyObservers(
+        "Đơn hàng mới đã được tạo: " + order.getOrderID()
+    );
+}
 
     @Override
     public void updateOrder(Order order) {
