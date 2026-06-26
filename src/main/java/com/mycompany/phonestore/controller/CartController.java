@@ -192,6 +192,20 @@ public class CartController {
             finalAddress = addressService.getAddressById(selectedAddressId);
         }
 
+        // Calculate original total first (giá gốc, chưa giảm) to compute discount
+        double rawTotal = 0.0;
+        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+            Product product = productService.getProductById(entry.getKey());
+            if (product != null) {
+                rawTotal += product.getPrice() * entry.getValue();
+            }
+        }
+
+        // Áp dụng Strategy Pattern để tính tổng tiền sau giảm giá
+        DiscountStrategy discountStrategy = DiscountStrategySelector.select(discountCode, user);
+        double finalTotal = discountStrategy.applyDiscount(rawTotal);
+        double discountAmount = rawTotal - finalTotal;
+
         // Create Order
         Order order = new Order();
         order.setOrderID(UUID.randomUUID().toString());
@@ -201,11 +215,12 @@ public class CartController {
         order.setReceiver(receiver);
         order.setPhoneNumber(phoneNumber);
         order.setUserID(user.getUserID());
+        order.setDiscount(discountAmount);
+        order.setFinalTotal(finalTotal);
         
         orderService.saveOrder(order);
 
-        // Create OrderDetails and calculate total (giá gốc, chưa giảm)
-        double rawTotal = 0.0;
+        // Create OrderDetails and update stock
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             Product product = productService.getProductById(entry.getKey());
             if (product != null) {
@@ -219,17 +234,11 @@ public class CartController {
 
                 orderDetailService.saveOrderDetail(detail);
 
-                rawTotal += product.getPrice() * entry.getValue();
-
                 // Optional: Reduce stock_quantity
                 product.setStock_quantity(product.getStock_quantity() - entry.getValue());
                 productService.updateProduct(product);
             }
         }
-
-        // Áp dụng Strategy Pattern để tính tổng tiền sau giảm giá
-        DiscountStrategy discountStrategy = DiscountStrategySelector.select(discountCode, user);
-        double finalTotal = discountStrategy.applyDiscount(rawTotal);
 
         // Process payment via Factory Method Pattern (truyền finalTotal đã giảm)
         String paymentMessage;

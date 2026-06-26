@@ -10,6 +10,8 @@ public class Order {
     private String receiver;
     private String phoneNumber;
     private String userID;
+    private double discount;
+    private double finalTotal;
 
     public Order() {}
 
@@ -21,6 +23,12 @@ public class Order {
         this.receiver = receiver;
         this.phoneNumber = phoneNumber;
         this.userID = userID;
+    }
+
+    public Order(String orderID, LocalDateTime orderDate, OrderStatus orderStatus, Address address, String receiver, String phoneNumber, String userID, double discount, double finalTotal) {
+        this(orderID, orderDate, orderStatus, address, receiver, phoneNumber, userID);
+        this.discount = discount;
+        this.finalTotal = finalTotal;
     }
 
     public String getOrderID() {
@@ -84,5 +92,21 @@ public class Order {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public double getFinalTotal() {
+        return finalTotal;
+    }
+
+    public void setFinalTotal(double finalTotal) {
+        this.finalTotal = finalTotal;
     }
 }

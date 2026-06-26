@@ -69,6 +69,8 @@ CREATE TABLE `Order` (
     addressID VARCHAR(50),
     receiver VARCHAR(100),
     phoneNumber VARCHAR(15),
+    discount DOUBLE DEFAULT 0.0,
+    finalTotal DOUBLE DEFAULT 0.0,
     FOREIGN KEY (userID) REFERENCES User(userID),
     FOREIGN KEY (addressID) REFERENCES Address(addressID)
 );

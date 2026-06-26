@@ -23,6 +23,10 @@ public class OrderController {
         java.util.Map<com.mycompany.phonestore.model.User, java.util.List<Order>> groupedOrders = new java.util.HashMap<>();
         java.util.Map<String, com.mycompany.phonestore.model.User> userCache = new java.util.HashMap<>();
         
+        java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
+        java.util.Map<String, java.util.List<String>> orderProductNames = new java.util.HashMap<>();
+        java.util.Map<String, Double> orderTotals = new java.util.HashMap<>();
+
         for (Order order : allOrders) {
             String uid = order.getUserID();
             com.mycompany.phonestore.model.User user = userCache.computeIfAbsent(uid, k -> userService.getUserById(k));
@@ -30,9 +34,17 @@ public class OrderController {
             if (user != null) {
                 groupedOrders.computeIfAbsent(user, k -> new java.util.ArrayList<>()).add(order);
             }
+            
+            orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
+            java.util.List<String> names = orderService.getProductNamesForOrder(order.getOrderID());
+            orderProductNames.put(order.getOrderID(), names);
+            orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
         
         model.addAttribute("groupedOrders", groupedOrders);
+        model.addAttribute("orderImages", orderImages);
+        model.addAttribute("orderProductNames", orderProductNames);
+        model.addAttribute("orderTotals", orderTotals);
         return "orders/list";
     }
 
@@ -70,12 +82,12 @@ public class OrderController {
         model.addAttribute("orders", orders);
         
         java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
-        java.util.Map<String, String> orderProductNames = new java.util.HashMap<>();
+        java.util.Map<String, java.util.List<String>> orderProductNames = new java.util.HashMap<>();
         java.util.Map<String, Double> orderTotals = new java.util.HashMap<>();
         for (Order order : orders) {
             orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
             java.util.List<String> names = orderService.getProductNamesForOrder(order.getOrderID());
-            orderProductNames.put(order.getOrderID(), String.join(", ", names));
+            orderProductNames.put(order.getOrderID(), names);
             orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
         model.addAttribute("orderImages", orderImages);
@@ -100,12 +112,12 @@ public class OrderController {
         model.addAttribute("orders", orders);
         
         java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
-        java.util.Map<String, String> orderProductNames = new java.util.HashMap<>();
+        java.util.Map<String, java.util.List<String>> orderProductNames = new java.util.HashMap<>();
         java.util.Map<String, Double> orderTotals = new java.util.HashMap<>();
         for (Order order : orders) {
             orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
             java.util.List<String> names = orderService.getProductNamesForOrder(order.getOrderID());
-            orderProductNames.put(order.getOrderID(), String.join(", ", names));
+            orderProductNames.put(order.getOrderID(), names);
             orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
         model.addAttribute("orderImages", orderImages);

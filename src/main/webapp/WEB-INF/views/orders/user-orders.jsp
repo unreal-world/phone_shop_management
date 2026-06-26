@@ -24,9 +24,9 @@
         <c:otherwise>
             <table>
                 <tr>
-                    <th style="width: 100px;">Hình ảnh sản phẩm</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Giá trị đơn hàng</th>
+                    <th style="width: 80px;">Hình ảnh sản phẩm</th>
+                    <th style="width: 250px;">Tên sản phẩm</th>
+                    <th style="width: 200px;">Giá trị đơn hàng</th>
                     <th>Ngày đặt</th>
                     <th>Người nhận</th>
                     <th>SĐT</th>
@@ -42,8 +42,31 @@
                                 </c:forEach>
                             </div>
                         </td>
-                        <td>${orderProductNames[order.orderID]}</td>
-                        <td style="color: #e44d26; font-weight: bold;"><fmt:formatNumber value="${orderTotals[order.orderID]}" pattern="#,##0"/> VNĐ</td>
+                        <td style="text-align: left; padding: 10px 15px;">
+                            <c:forEach var="name" items="${orderProductNames[order.orderID]}">
+                                <div style="margin-bottom: 4px; font-size: 0.95em; color: #333;">${name}</div>
+                            </c:forEach>
+                        </td>
+                        <td style="font-weight: bold; line-height: 1.5; text-align: left; padding: 10px 15px;">
+                            <c:choose>
+                                <c:when test="${order.discount > 0}">
+                                    <div style="font-size: 0.85em; color: #777; font-weight: normal;">
+                                        Giá gốc: <span style="text-decoration: line-through;"><fmt:formatNumber value="${orderTotals[order.orderID]}" pattern="#,##0"/> VNĐ</span>
+                                    </div>
+                                    <div style="font-size: 0.85em; color: #28a745; font-weight: normal;">
+                                        Giảm giá: -<fmt:formatNumber value="${order.discount}" pattern="#,##0"/> VNĐ
+                                    </div>
+                                    <div style="color: #e44d26; margin-top: 3px;">
+                                        Tổng: <fmt:formatNumber value="${order.finalTotal}" pattern="#,##0"/> VNĐ
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="color: #e44d26; text-align: center;">
+                                        <fmt:formatNumber value="${order.finalTotal > 0 ? order.finalTotal : orderTotals[order.orderID]}" pattern="#,##0"/> VNĐ
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${order.orderDate}</td>
                         <td>${order.receiver}</td>
                         <td>${order.phoneNumber}</td>

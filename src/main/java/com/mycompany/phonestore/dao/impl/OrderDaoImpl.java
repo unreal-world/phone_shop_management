@@ -42,7 +42,9 @@ public class OrderDaoImpl implements OrderDao {
                     address,
                     rs.getString("receiver"),
                     rs.getString("phoneNumber"),
-                    rs.getString("userID")
+                    rs.getString("userID"),
+                    rs.getDouble("discount"),
+                    rs.getDouble("finalTotal")
             );
         });
     }
@@ -70,7 +72,9 @@ public class OrderDaoImpl implements OrderDao {
                     address,
                     rs.getString("receiver"),
                     rs.getString("phoneNumber"),
-                    rs.getString("userID")
+                    rs.getString("userID"),
+                    rs.getDouble("discount"),
+                    rs.getDouble("finalTotal")
             );
         });
         return orders.isEmpty() ? null : orders.get(0);
@@ -99,7 +103,9 @@ public class OrderDaoImpl implements OrderDao {
                     address,
                     rs.getString("receiver"),
                     rs.getString("phoneNumber"),
-                    rs.getString("userID")
+                    rs.getString("userID"),
+                    rs.getDouble("discount"),
+                    rs.getDouble("finalTotal")
             );
         });
     }
@@ -118,11 +124,13 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<String> getProductNamesForOrder(String orderID) {
-        String sql = "SELECT DISTINCT p.productName " +
+        String sql = "SELECT p.productName, od.quantity " +
                      "FROM OrderDetail od " +
                      "JOIN Product p ON od.productID = p.productID " +
                      "WHERE od.orderID = ?";
-        return jdbcTemplate.query(sql, new Object[]{orderID}, (rs, rowNum) -> rs.getString("productName"));
+        return jdbcTemplate.query(sql, new Object[]{orderID}, (rs, rowNum) -> 
+            rs.getString("productName") + " - Số lượng: " + rs.getInt("quantity")
+        );
     }
 
     @Override
@@ -134,16 +142,16 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void addOrder(Order order) {
-        String sql = "INSERT INTO `Order` (orderID, userID, orderDate, orderStatus, addressID, receiver, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `Order` (orderID, userID, orderDate, orderStatus, addressID, receiver, phoneNumber, discount, finalTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String addressID = order.getAddress() != null ? order.getAddress().getAddressID() : null;
-        jdbcTemplate.update(sql, order.getOrderID(), order.getUserID(), java.sql.Timestamp.valueOf(order.getOrderDate()), order.getOrderStatus().toString(), addressID, order.getReceiver(), order.getPhoneNumber());
+        jdbcTemplate.update(sql, order.getOrderID(), order.getUserID(), java.sql.Timestamp.valueOf(order.getOrderDate()), order.getOrderStatus().toString(), addressID, order.getReceiver(), order.getPhoneNumber(), order.getDiscount(), order.getFinalTotal());
     }
 
     @Override
     public void updateOrder(Order order) {
-        String sql = "UPDATE `Order` SET userID=?, orderDate=?, orderStatus=?, addressID=?, receiver=?, phoneNumber=? WHERE orderID=?";
+        String sql = "UPDATE `Order` SET userID=?, orderDate=?, orderStatus=?, addressID=?, receiver=?, phoneNumber=?, discount=?, finalTotal=? WHERE orderID=?";
         String addressID = order.getAddress() != null ? order.getAddress().getAddressID() : null;
-        jdbcTemplate.update(sql, order.getUserID(), java.sql.Timestamp.valueOf(order.getOrderDate()), order.getOrderStatus().toString(), addressID, order.getReceiver(), order.getPhoneNumber(), order.getOrderID());
+        jdbcTemplate.update(sql, order.getUserID(), java.sql.Timestamp.valueOf(order.getOrderDate()), order.getOrderStatus().toString(), addressID, order.getReceiver(), order.getPhoneNumber(), order.getDiscount(), order.getFinalTotal(), order.getOrderID());
     }
 
     @Override
