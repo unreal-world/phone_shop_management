@@ -138,6 +138,43 @@
                                     inputs.forEach(function(input) { input.required = false; });
                                 }
                             }
+
+                            function previewDiscount() {
+                                var code = document.getElementById('discountCode').value.trim();
+                                var rawTotal = ${total};
+                                var resultDiv = document.getElementById('discountResult');
+
+                                fetch('${pageContext.request.contextPath}/cart/apply-discount'
+                                    + '?code=' + encodeURIComponent(code)
+                                    + '&rawTotal=' + rawTotal)
+                                    .then(function(res) { return res.json(); })
+                                    .then(function(data) {
+                                        resultDiv.style.display = 'block';
+                                        if (data.saved > 0) {
+                                            resultDiv.style.backgroundColor = '#d4edda';
+                                            resultDiv.style.color = '#155724';
+                                            resultDiv.style.border = '1px solid #c3e6cb';
+                                            resultDiv.innerHTML =
+                                                '✅ ' + data.description + '<br>'
+                                                + 'Tiết kiệm: <strong>'
+                                                + data.saved.toLocaleString('vi-VN') + 'đ</strong><br>'
+                                                + 'Tổng thanh toán: <strong>'
+                                                + data.discountedTotal.toLocaleString('vi-VN') + 'đ</strong>';
+                                        } else {
+                                            resultDiv.style.backgroundColor = '#fff3cd';
+                                            resultDiv.style.color = '#856404';
+                                            resultDiv.style.border = '1px solid #ffc107';
+                                            resultDiv.innerHTML = 'ℹ️ ' + data.description;
+                                        }
+                                    })
+                                    .catch(function() {
+                                        resultDiv.style.display = 'block';
+                                        resultDiv.style.backgroundColor = '#f8d7da';
+                                        resultDiv.style.color = '#721c24';
+                                        resultDiv.style.border = '1px solid #f5c6cb';
+                                        resultDiv.innerHTML = '❌ Không thể kiểm tra mã giảm giá.';
+                                    });
+                            }
                         </script>
                         <div class="form-group">
                             <label for="paymentMethod">Phương thức thanh toán:</label>
@@ -146,6 +183,21 @@
                                 <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
                                 <option value="MOMO">Ví điện tử MoMo</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="discountCode">Mã giảm giá (nếu có):</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="discountCode" name="discountCode"
+                                       placeholder="VD: SALE10, GIAM200K..."
+                                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                                <button type="button" onclick="previewDiscount()"
+                                        style="padding: 10px 16px; background: #28a745; color: white;
+                                               border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                                    Áp dụng
+                                </button>
+                            </div>
+                            <div id="discountResult" style="display: none; margin-top: 10px;
+                                 padding: 10px; border-radius: 4px; font-size: 14px;"></div>
                         </div>
                         <button type="submit" class="btn-checkout">Xác nhận thanh toán</button>
                     </form>

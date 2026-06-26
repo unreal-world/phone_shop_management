@@ -13,8 +13,12 @@ import com.mycompany.phonestore.model.Address;
 import com.mycompany.phonestore.factory.payment.PaymentProcessor;
 import com.mycompany.phonestore.factory.payment.PaymentProcessorCreator;
 import com.mycompany.phonestore.factory.payment.PaymentProcessorFactory;
+import com.mycompany.phonestore.strategy.discount.DiscountStrategy;
+import com.mycompany.phonestore.strategy.discount.DiscountStrategySelector;
+import com.mycompany.phonestore.strategy.discount.NoDiscountStrategy;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -127,6 +131,26 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    // Preview giảm giá qua AJAX (Strategy Pattern)
+    @GetMapping("/apply-discount")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> applyDiscount(
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam("rawTotal") double rawTotal,
+            HttpSession session) {
+
+        User user = (User) session.getAttribute("loggedInUser");
+        DiscountStrategy strategy = DiscountStrategySelector.select(code, user);
+        double discountedTotal = strategy.applyDiscount(rawTotal);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("discountedTotal", discountedTotal);
+        result.put("description", strategy.getDescription());
+        result.put("saved", rawTotal - discountedTotal);
+
+        return ResponseEntity.ok(result);
+    }
+
     // Checkout
     @PostMapping("/checkout")
     public String checkout(@RequestParam("receiver") String receiver,
@@ -137,6 +161,7 @@ public class CartController {
                            @RequestParam(value = "street", required = false) String street,
                            @RequestParam(value = "houseNumber", required = false) String houseNumber,
                            @RequestParam("paymentMethod") String paymentMethod,
+                           @RequestParam(value = "discountCode", required = false) String discountCode,
                            HttpSession session,
                            RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("loggedInUser");
@@ -179,8 +204,8 @@ public class CartController {
         
         orderService.saveOrder(order);
 
-        // Create OrderDetails and calculate total
-        double total = 0.0;
+        // Create OrderDetails and calculate total (giá gốc, chưa giảm)
+        double rawTotal = 0.0;
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             Product product = productService.getProductById(entry.getKey());
             if (product != null) {
@@ -191,31 +216,42 @@ public class CartController {
                 detail.setQuantity(entry.getValue());
                 detail.setUnitPrice(product.getPrice());
                 detail.setTotalPrice(product.getPrice() * entry.getValue());
-                
+
                 orderDetailService.saveOrderDetail(detail);
-                
-                total += product.getPrice() * entry.getValue();
-                
+
+                rawTotal += product.getPrice() * entry.getValue();
+
                 // Optional: Reduce stock_quantity
                 product.setStock_quantity(product.getStock_quantity() - entry.getValue());
                 productService.updateProduct(product);
             }
         }
 
-        // Process payment via Factory Method Pattern
+        // Áp dụng Strategy Pattern để tính tổng tiền sau giảm giá
+        DiscountStrategy discountStrategy = DiscountStrategySelector.select(discountCode, user);
+        double finalTotal = discountStrategy.applyDiscount(rawTotal);
+
+        // Process payment via Factory Method Pattern (truyền finalTotal đã giảm)
         String paymentMessage;
         try {
             PaymentProcessorCreator creator = PaymentProcessorFactory.getCreator(paymentMethod);
             PaymentProcessor processor = creator.createPaymentProcessor();
-            paymentMessage = processor.processPayment(order, total);
+            paymentMessage = processor.processPayment(order, finalTotal);
         } catch (IllegalArgumentException e) {
             paymentMessage = "Đặt hàng thành công, nhưng không thể xử lý thanh toán: " + e.getMessage();
         }
 
+        // Thêm thông tin giảm giá vào thông báo (nếu có áp dụng)
+        String discountInfo = (discountStrategy instanceof NoDiscountStrategy)
+                ? ""
+                : " | " + discountStrategy.getDescription();
+
         // Clear cart
         session.removeAttribute("cart");
         
-        redirectAttributes.addFlashAttribute("successMessage", "Đặt hàng thành công! Mã đơn hàng: " + order.getOrderID() + ". " + paymentMessage);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Đặt hàng thành công! Mã đơn hàng: " + order.getOrderID()
+                + discountInfo + ". " + paymentMessage);
         return "redirect:/";
     }
 }

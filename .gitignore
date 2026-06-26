@@ -1,5 +1,6 @@
 # --- Maven ---
 target/
+.tools/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -38,3 +39,5 @@ Thumbs.db
 # --- Bảo mật (Tùy chọn) ---
 # Nếu bạn không muốn lộ mật khẩu database lên GitHub, hãy bỏ comment dòng dưới:
 # src/main/resources/database.properties
+
+.fake
