@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 
 @Configuration
@@ -20,7 +20,7 @@ public class AppConfig {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         
         // Ưu tiên đọc từ biến môi trường (Render/Aiven), nếu không có sẽ lấy từ file database.properties
         String dbDriver = System.getenv("JDBC_DRIVER_CLASSNAME");
@@ -44,9 +44,16 @@ public class AppConfig {
         }
         
         dataSource.setDriverClassName(dbDriver);
-        dataSource.setUrl(dbUrl);
+        dataSource.setJdbcUrl(dbUrl);
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(dbPassword);
+        
+        // Cấu hình HikariCP tối ưu cho môi trường deploy
+        dataSource.setMaximumPoolSize(10);
+        dataSource.setMinimumIdle(2);
+        dataSource.setIdleTimeout(30000);
+        dataSource.setConnectionTimeout(20000);
+        dataSource.setMaxLifetime(1800000);
         
         return dataSource;
     }
