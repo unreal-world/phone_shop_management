@@ -1,6 +1,6 @@
 
-CREATE DATABASE IF NOT EXISTS PhoneStoreDB;
-USE PhoneStoreDB;
+-- CREATE DATABASE IF NOT EXISTS PhoneStoreDB;
+-- USE PhoneStoreDB;
 
 
 CREATE TABLE User (
@@ -84,3 +84,12 @@ CREATE TABLE OrderDetail (
     FOREIGN KEY (orderID) REFERENCES `Order`(orderID) ON DELETE CASCADE,
     FOREIGN KEY (productID) REFERENCES Product(productID)
 );
+
+-- ========================================================
+-- DỮ LIỆU KHỞI TẠO MỚI (CHỈNH SỬA TÙY Ý TRƯỚC KHI IMPORT)
+-- ========================================================
+
+-- 1. Tài khoản Admin mặc định
+-- Đăng nhập bằng tài khoản: admin / admin123
+INSERT INTO User (userID, username, password, fullName, email, phoneNumber, role) VALUES 
+('admin-default-id', 'admin', 'admin123', 'Administrator', 'admin@phonestore.com', '0987654321', 'ADMIN');

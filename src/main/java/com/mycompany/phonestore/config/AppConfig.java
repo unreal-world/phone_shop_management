@@ -21,10 +21,33 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.username"));
-        dataSource.setPassword(env.getProperty("jdbc.password"));
+        
+        // Ưu tiên đọc từ biến môi trường (Render/Aiven), nếu không có sẽ lấy từ file database.properties
+        String dbDriver = System.getenv("JDBC_DRIVER_CLASSNAME");
+        if (dbDriver == null || dbDriver.isEmpty()) {
+            dbDriver = env.getProperty("jdbc.driverClassName");
+        }
+        
+        String dbUrl = System.getenv("JDBC_URL");
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            dbUrl = env.getProperty("jdbc.url");
+        }
+        
+        String dbUsername = System.getenv("JDBC_USERNAME");
+        if (dbUsername == null || dbUsername.isEmpty()) {
+            dbUsername = env.getProperty("jdbc.username");
+        }
+        
+        String dbPassword = System.getenv("JDBC_PASSWORD");
+        if (dbPassword == null || dbPassword.isEmpty()) {
+            dbPassword = env.getProperty("jdbc.password");
+        }
+        
+        dataSource.setDriverClassName(dbDriver);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUsername);
+        dataSource.setPassword(dbPassword);
+        
         return dataSource;
     }
 
