@@ -1,0 +1,11 @@
+jdbc.driverClassName=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/PhoneStoreDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+jdbc.username=root
+jdbc.password=YOUR_MYSQL_PASSWORD_HERE
+
+# Cau hinh SMTP Gmail (Quen mat khau)
+mail.host=smtp.gmail.com
+mail.port=587
+mail.username=your_email@gmail.com
+mail.password=your_gmail_app_password_here
+mail.from=your_email@gmail.com

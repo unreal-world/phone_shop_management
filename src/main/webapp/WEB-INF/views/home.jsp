@@ -45,10 +45,19 @@
                 </div>
                 
                 <div style="margin-bottom: 20px;">
-                    <form action="${pageContext.request.contextPath}/" method="get" style="display: flex; gap: 10px; max-width: 500px;">
-                        <input type="text" name="keyword" value="${keyword}" placeholder="Tìm kiếm sản phẩm theo tên..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <form action="${pageContext.request.contextPath}/" method="get" style="display: flex; gap: 10px; max-width: 750px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" name="keyword" value="${keyword}" placeholder="Tìm kiếm sản phẩm theo tên..." style="flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                        
+                        <%-- Dropdown sắp xếp theo giá --%>
+                        <select name="sort" onchange="this.form.submit()" id="sortSelect"
+                                style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer; font-size: 14px;">
+                            <option value="" ${empty sort ? 'selected' : ''}>-- Sắp xếp --</option>
+                            <option value="price_asc"  ${'price_asc'  == sort ? 'selected' : ''}>💰 Giá: Thấp → Cao</option>
+                            <option value="price_desc" ${'price_desc' == sort ? 'selected' : ''}>💎 Giá: Cao → Thấp</option>
+                        </select>
+
                         <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Tìm kiếm</button>
-                        <c:if test="${not empty keyword}">
+                        <c:if test="${not empty keyword or not empty sort}">
                             <a href="${pageContext.request.contextPath}/" style="padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">Xóa lọc</a>
                         </c:if>
                     </form>

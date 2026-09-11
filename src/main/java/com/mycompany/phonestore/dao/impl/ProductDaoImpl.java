@@ -90,4 +90,43 @@ public class ProductDaoImpl implements ProductDao {
             return p;
         });
     }
+
+    @Override
+    public List<Product> getProducts(String keyword, String sort) {
+        // Whitelist để tránh SQL Injection - KHÔNG ghép sort trực tiếp vào SQL
+        String orderBy;
+        if ("price_asc".equals(sort)) {
+            orderBy = " ORDER BY p.price ASC";
+        } else if ("price_desc".equals(sort)) {
+            orderBy = " ORDER BY p.price DESC";
+        } else {
+            orderBy = " ORDER BY p.productID DESC"; // Mặc định: sản phẩm mới nhất trước
+        }
+
+        String baseSelect = "SELECT p.*, (SELECT imageSource FROM Image i WHERE i.productID = p.productID LIMIT 1) as primaryImage FROM Product p";
+
+        String sql;
+        Object[] params;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql = baseSelect + " WHERE LOWER(p.productName) LIKE LOWER(?)" + orderBy;
+            params = new Object[]{"%" + keyword.trim() + "%"};
+        } else {
+            sql = baseSelect + orderBy;
+            params = new Object[]{};
+        }
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            Product p = new Product(
+                rs.getString("productID"),
+                rs.getString("productName"),
+                rs.getString("brand"),
+                rs.getDouble("price"),
+                rs.getString("description"),
+                rs.getInt("stock_quantity")
+            );
+            p.setPrimaryImage(rs.getString("primaryImage"));
+            p.setIsDeleted(rs.getBoolean("isDeleted"));
+            return p;
+        });
+    }
 }

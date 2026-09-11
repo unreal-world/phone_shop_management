@@ -11,4 +11,6 @@ public interface ProductService {
     void deleteProduct(String productID);
     Product getProductById(String productID);
     List<Product> searchProducts(String keyword);
+    // Phương thức tổng quát: hỗ trợ tìm kiếm + sắp xếp theo giá
+    List<Product> getProducts(String keyword, String sort);
 }

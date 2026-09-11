@@ -63,6 +63,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM User WHERE email = ?";
+        List<User> users = jdbcTemplate.query(sql, new Object[]{email}, (rs, rowNum) -> new User(
+                rs.getString("userID"),
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("fullName"),
+                rs.getString("email"),
+                rs.getString("phoneNumber"),
+                UserRole.valueOf(rs.getString("role"))
+        ));
+        return users.isEmpty() ? null : users.get(0);
+    }
+
+    @Override
     public void addUser(User user) {
         String sql = "INSERT INTO User (userID, username, password, fullName, email, phoneNumber, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, user.getUserID(), user.getUsername(), user.getPassword(), user.getFullName(), user.getEmail(), user.getPhoneNumber(), user.getRole().toString());

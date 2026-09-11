@@ -73,6 +73,57 @@ public class AuthController {
         return "auth/login";
     }
 
+    // ==================== QUÊN MẬT KHẨU ====================
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm() {
+        return "auth/forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, Model model) {
+        String token = userService.createPasswordResetToken(email);
+        if (token == null) {
+            model.addAttribute("error", "Email không tồn tại trong hệ thống!");
+            return "auth/forgot-password";
+        }
+        model.addAttribute("success", "Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hòm thư của bạn!");
+        return "auth/forgot-password";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        String userID = userService.validatePasswordResetToken(token);
+        if (userID == null) {
+            model.addAttribute("error", "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn!");
+            return "auth/reset-password";
+        }
+        model.addAttribute("token", token);
+        return "auth/reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam("token") String token,
+                                       @RequestParam("newPassword") String newPassword,
+                                       @RequestParam("confirmPassword") String confirmPassword,
+                                       Model model) {
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+            model.addAttribute("token", token);
+            return "auth/reset-password";
+        }
+
+        String userID = userService.validatePasswordResetToken(token);
+        if (userID == null) {
+            model.addAttribute("error", "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn!");
+            return "auth/reset-password";
+        }
+
+        userService.resetPassword(token, newPassword);
+        model.addAttribute("success", "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.");
+        return "auth/login";
+    }
+
     // ==================== ĐĂNG XUẤT ====================
 
     @GetMapping("/logout")

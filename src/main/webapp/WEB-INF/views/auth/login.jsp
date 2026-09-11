@@ -41,6 +41,10 @@
                     <a href="${pageContext.request.contextPath}/auth/register">Đăng ký ngay</a>
                 </div>
 
+                <div class="bottom-links">
+                    <a href="${pageContext.request.contextPath}/auth/forgot-password">Quên mật khẩu?</a>
+                </div>
+
                 <div class="home-link">
                     <a href="${pageContext.request.contextPath}/">← Quay về trang chủ</a>
                 </div>
