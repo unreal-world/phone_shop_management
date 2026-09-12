@@ -72,10 +72,31 @@ public class AppConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(env.getProperty("mail.host"));
-        mailSender.setPort(Integer.parseInt(env.getProperty("mail.port", "587")));
-        mailSender.setUsername(env.getProperty("mail.username"));
-        mailSender.setPassword(env.getProperty("mail.password"));
+        
+        String mailHost = System.getenv("MAIL_HOST");
+        if (mailHost == null || mailHost.isEmpty()) {
+            mailHost = env.getProperty("mail.host");
+        }
+        
+        String mailPortStr = System.getenv("MAIL_PORT");
+        if (mailPortStr == null || mailPortStr.isEmpty()) {
+            mailPortStr = env.getProperty("mail.port", "587");
+        }
+        
+        String mailUsername = System.getenv("MAIL_USERNAME");
+        if (mailUsername == null || mailUsername.isEmpty()) {
+            mailUsername = env.getProperty("mail.username");
+        }
+        
+        String mailPassword = System.getenv("MAIL_PASSWORD");
+        if (mailPassword == null || mailPassword.isEmpty()) {
+            mailPassword = env.getProperty("mail.password");
+        }
+        
+        mailSender.setHost(mailHost);
+        mailSender.setPort(Integer.parseInt(mailPortStr != null ? mailPortStr : "587"));
+        mailSender.setUsername(mailUsername);
+        mailSender.setPassword(mailPassword);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

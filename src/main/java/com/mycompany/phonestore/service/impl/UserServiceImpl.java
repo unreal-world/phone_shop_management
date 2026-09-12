@@ -21,13 +21,16 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final PasswordResetTokenDao passwordResetTokenDao;
     private final JavaMailSender mailSender;
+    private final org.springframework.core.env.Environment env;
 
     public UserServiceImpl(UserDao userDao,
                            PasswordResetTokenDao passwordResetTokenDao,
-                           JavaMailSender mailSender) {
+                           JavaMailSender mailSender,
+                           org.springframework.core.env.Environment env) {
         this.userDao = userDao;
         this.passwordResetTokenDao = passwordResetTokenDao;
         this.mailSender = mailSender;
+        this.env = env;
     }
 
     @Override
@@ -113,11 +116,24 @@ public class UserServiceImpl implements UserService {
             org.springframework.mail.javamail.MimeMessageHelper helper =
                     new org.springframework.mail.javamail.MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            helper.setFrom("unrealworld2002@gmail.com");
+            // Đọc địa chỉ gửi thư từ ENV hoặc properties
+            String fromEmail = System.getenv("MAIL_FROM");
+            if (fromEmail == null || fromEmail.isEmpty()) {
+                fromEmail = env.getProperty("mail.from", env.getProperty("mail.username", "unrealworld2002@gmail.com"));
+            }
+            helper.setFrom(fromEmail);
             helper.setTo(email);
             helper.setSubject("[Phone Store] Đặt lại mật khẩu");
 
-            String resetUrl = "http://localhost:8080/auth/reset-password?token=" + token;
+            // Đọc Base URL từ ENV (khi deploy online, ví dụ: https://my-app.onrender.com) hoặc local
+            String baseUrl = System.getenv("APP_BASE_URL");
+            if (baseUrl == null || baseUrl.isEmpty()) {
+                baseUrl = env.getProperty("app.baseUrl", "http://localhost:8080");
+            }
+            if (baseUrl.endsWith("/")) {
+                baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+            }
+            String resetUrl = baseUrl + "/auth/reset-password?token=" + token;
             String htmlContent = "<div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333;\">"
                     + "<h2 style=\"color: #007bff;\">Phone Store - Yêu cầu đặt lại mật khẩu</h2>"
                     + "<p>Xin chào <b>" + user.getFullName() + "</b>,</p>"
