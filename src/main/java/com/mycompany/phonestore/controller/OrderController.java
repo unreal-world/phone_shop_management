@@ -18,9 +18,17 @@ public class OrderController {
     private com.mycompany.phonestore.service.UserService userService;
 
     @GetMapping("/list")
-    public String listOrders(Model model) {
+    public String listOrders(Model model,
+                             @RequestParam(value = "keyword", required = false) String keyword,
+                             @RequestParam(value = "sort", required = false) String sort,
+                             jakarta.servlet.http.HttpSession session) {
+        com.mycompany.phonestore.model.User loggedInUser = (com.mycompany.phonestore.model.User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !"ADMIN".equals(loggedInUser.getRole().name())) {
+            return "redirect:/auth/login";
+        }
+
         java.util.List<Order> allOrders = orderService.getAllOrders();
-        java.util.Map<com.mycompany.phonestore.model.User, java.util.List<Order>> groupedOrders = new java.util.HashMap<>();
+        java.util.Map<com.mycompany.phonestore.model.User, java.util.List<Order>> userOrdersMap = new java.util.HashMap<>();
         java.util.Map<String, com.mycompany.phonestore.model.User> userCache = new java.util.HashMap<>();
         
         java.util.Map<String, java.util.List<String>> orderImages = new java.util.HashMap<>();
@@ -32,7 +40,7 @@ public class OrderController {
             com.mycompany.phonestore.model.User user = userCache.computeIfAbsent(uid, k -> userService.getUserById(k));
             
             if (user != null) {
-                groupedOrders.computeIfAbsent(user, k -> new java.util.ArrayList<>()).add(order);
+                userOrdersMap.computeIfAbsent(user, k -> new java.util.ArrayList<>()).add(order);
             }
             
             orderImages.put(order.getOrderID(), orderService.getProductImagesForOrder(order.getOrderID()));
@@ -40,11 +48,68 @@ public class OrderController {
             orderProductNames.put(order.getOrderID(), names);
             orderTotals.put(order.getOrderID(), orderService.getOrderTotalValue(order.getOrderID()));
         }
+
+        // Lọc theo từ khóa (tên khách hàng, tên tài khoản hoặc người nhận)
+        final String kw = (keyword != null) ? keyword.trim().toLowerCase() : "";
+        java.util.List<com.mycompany.phonestore.model.User> filteredUsers = new java.util.ArrayList<>();
+
+        for (com.mycompany.phonestore.model.User user : userOrdersMap.keySet()) {
+            if (kw.isEmpty()) {
+                filteredUsers.add(user);
+            } else {
+                String fullName = user.getFullName() != null ? user.getFullName().toLowerCase() : "";
+                String username = user.getUsername() != null ? user.getUsername().toLowerCase() : "";
+                boolean matched = fullName.contains(kw) || username.contains(kw);
+
+                if (!matched) {
+                    java.util.List<Order> orders = userOrdersMap.get(user);
+                    if (orders != null) {
+                        for (Order o : orders) {
+                            if ((o.getReceiver() != null && o.getReceiver().toLowerCase().contains(kw)) ||
+                                (o.getOrderID() != null && o.getOrderID().toLowerCase().contains(kw))) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (matched) {
+                    filteredUsers.add(user);
+                }
+            }
+        }
+
+        // Sắp xếp danh sách khách hàng theo tên (A-Z hoặc Z-A)
+        java.text.Collator collator = java.text.Collator.getInstance(new java.util.Locale("vi", "VN"));
+        collator.setStrength(java.text.Collator.PRIMARY);
+
+        if ("name_asc".equalsIgnoreCase(sort)) {
+            filteredUsers.sort((u1, u2) -> {
+                String n1 = u1.getFullName() != null && !u1.getFullName().trim().isEmpty() ? u1.getFullName().trim() : u1.getUsername();
+                String n2 = u2.getFullName() != null && !u2.getFullName().trim().isEmpty() ? u2.getFullName().trim() : u2.getUsername();
+                return collator.compare(n1 != null ? n1 : "", n2 != null ? n2 : "");
+            });
+        } else if ("name_desc".equalsIgnoreCase(sort)) {
+            filteredUsers.sort((u1, u2) -> {
+                String n1 = u1.getFullName() != null && !u1.getFullName().trim().isEmpty() ? u1.getFullName().trim() : u1.getUsername();
+                String n2 = u2.getFullName() != null && !u2.getFullName().trim().isEmpty() ? u2.getFullName().trim() : u2.getUsername();
+                return collator.compare(n2 != null ? n2 : "", n1 != null ? n1 : "");
+            });
+        }
+
+        // Tạo LinkedHashMap để duy trì đúng thứ tự đã lọc và sắp xếp
+        java.util.Map<com.mycompany.phonestore.model.User, java.util.List<Order>> groupedOrders = new java.util.LinkedHashMap<>();
+        for (com.mycompany.phonestore.model.User user : filteredUsers) {
+            groupedOrders.put(user, userOrdersMap.get(user));
+        }
         
         model.addAttribute("groupedOrders", groupedOrders);
         model.addAttribute("orderImages", orderImages);
         model.addAttribute("orderProductNames", orderProductNames);
         model.addAttribute("orderTotals", orderTotals);
+        model.addAttribute("keyword", keyword != null ? keyword.trim() : "");
+        model.addAttribute("sort", sort != null ? sort.trim() : "");
         return "orders/list";
     }
 

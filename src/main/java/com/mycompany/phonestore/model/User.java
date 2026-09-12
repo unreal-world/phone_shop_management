@@ -87,4 +87,17 @@ public class User {
     public void setAddress(List<Address> address) {
         this.address = address;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userID != null ? userID.equals(user.userID) : user.userID == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return userID != null ? userID.hashCode() : 0;
+    }
 }

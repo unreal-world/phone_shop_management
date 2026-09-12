@@ -10,8 +10,30 @@
 <body>
     <h2>Quản lý toàn bộ đơn hàng (Admin)</h2>
     
-    <div style="margin-bottom: 20px;">
-        <a href="${pageContext.request.contextPath}/" style="text-decoration: none; color: #007bff; font-weight: bold;">← Quay lại trang chủ</a>
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <a href="${pageContext.request.contextPath}/" style="text-decoration: none; color: #007bff; font-weight: bold; font-size: 15px;">← Quay lại trang chủ</a>
+    </div>
+
+    <%-- Thanh tìm kiếm và sắp xếp --%>
+    <div style="margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #e0e0e0;">
+        <form action="${pageContext.request.contextPath}/orders/list" method="get" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <input type="text" name="keyword" value="${keyword}" placeholder="🔍 Tìm kiếm theo tên khách hàng hoặc tên tài khoản..." 
+                   style="flex: 1; min-width: 260px; padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;">
+            
+            <%-- Dropbox sắp xếp theo tên khách hàng --%>
+            <select name="sort" onchange="this.form.submit()" id="sortSelect"
+                    style="padding: 10px 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px;">
+                <option value="" ${empty sort ? 'selected' : ''}>-- Sắp xếp theo tên khách hàng --</option>
+                <option value="name_asc"  ${'name_asc'  == sort ? 'selected' : ''}>Tên khách hàng: A → Z</option>
+                <option value="name_desc" ${'name_desc' == sort ? 'selected' : ''}>Tên khách hàng: Z → A</option>
+            </select>
+
+            <button type="submit" style="padding: 10px 22px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">Tìm kiếm</button>
+            
+            <c:if test="${not empty keyword or not empty sort}">
+                <a href="${pageContext.request.contextPath}/orders/list" style="padding: 10px 18px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">Xóa lọc</a>
+            </c:if>
+        </form>
     </div>
 
     <c:if test="${not empty successMessage}">
@@ -22,8 +44,16 @@
 
     <c:choose>
         <c:when test="${empty groupedOrders}">
-            <div class="empty-orders">
-                <p>Hệ thống chưa có đơn hàng nào.</p>
+            <div class="empty-orders" style="padding: 40px 20px; background: #fff; border-radius: 8px; border: 1px dashed #ccc; margin-top: 20px; text-align: center;">
+                <c:choose>
+                    <c:when test="${not empty keyword}">
+                        <p style="font-size: 16px; color: #555; margin: 0 0 10px;">Không tìm thấy đơn hàng nào phù hợp với từ khóa: "<strong>${keyword}</strong>".</p>
+                        <a href="${pageContext.request.contextPath}/orders/list" style="color: #007bff; text-decoration: none; font-weight: 600;">Xem tất cả đơn hàng</a>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="font-size: 16px; color: #666; margin: 0;">Hệ thống chưa có đơn hàng nào.</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </c:when>
         <c:otherwise>
