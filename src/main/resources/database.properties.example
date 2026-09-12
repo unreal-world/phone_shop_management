@@ -3,9 +3,12 @@ jdbc.url=jdbc:mysql://localhost:3306/PhoneStoreDB?useSSL=false&serverTimezone=UT
 jdbc.username=root
 jdbc.password=YOUR_MYSQL_PASSWORD_HERE
 
-# Cau hinh SMTP Gmail (Quen mat khau)
-mail.host=smtp.gmail.com
+# Cau hinh SMTP (Brevo)
+mail.host=smtp-relay.brevo.com
 mail.port=587
-mail.username=your_email@gmail.com
-mail.password=your_gmail_app_password_here
-mail.from=your_email@gmail.com
+mail.username=your_login_brevo_or_gmail@example.com
+mail.password=your_smtp_key_here
+mail.from=your_verified_email@example.com
+
+# Domain website (de link reset mat khau hoat dong dung)
+app.baseUrl=http://localhost:8080

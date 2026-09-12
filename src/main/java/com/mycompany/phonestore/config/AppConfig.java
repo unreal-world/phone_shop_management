@@ -17,7 +17,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:database.properties") // Đọc file thuộc tính database [cite: 453]
+@PropertySource(value = "classpath:database.properties", ignoreResourceNotFound = true) // Không báo lỗi nếu không có file trên Git/Render
 @ComponentScan(basePackages = "com.mycompany.phonestore") // Quét Service và DAO [cite: 430-435]
 public class AppConfig {
 

@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:database.properties") // Đọc trực tiếp file cấu hình từ resources [cite: 453-454]
+@PropertySource(value = "classpath:database.properties", ignoreResourceNotFound = true) // Không báo lỗi nếu không có file trên Git/Render
 @ComponentScan(basePackages = "com.mycompany.phonestore")
 public class WebConfig implements WebMvcConfigurer {
 
