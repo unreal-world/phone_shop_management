@@ -76,18 +76,62 @@ public class AuthController {
     // ==================== QUÊN MẬT KHẨU ====================
 
     @GetMapping("/forgot-password")
-    public String showForgotPasswordForm() {
+    public String showForgotPasswordForm(@RequestParam(value = "username", required = false) String username, Model model) {
+        if (username != null && !username.trim().isEmpty()) {
+            username = username.trim();
+            User user = userService.getUserByUsername(username);
+            if (user == null) {
+                model.addAttribute("error", "Tài khoản \"" + username + "\" không tồn tại trong hệ thống!");
+                model.addAttribute("username", username);
+            } else if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                model.addAttribute("error", "Tài khoản \"" + username + "\" chưa thiết lập địa chỉ email!");
+                model.addAttribute("username", username);
+            } else {
+                model.addAttribute("user", user);
+                model.addAttribute("username", user.getUsername());
+                model.addAttribute("email", user.getEmail());
+            }
+        } else {
+            model.addAttribute("error", "Vui lòng nhập tên tài khoản trước khi chọn Quên mật khẩu!");
+        }
         return "auth/forgot-password";
     }
 
     @PostMapping("/forgot-password")
-    public String processForgotPassword(@RequestParam("email") String email, Model model) {
-        String token = userService.createPasswordResetToken(email);
-        if (token == null) {
-            model.addAttribute("error", "Email không tồn tại trong hệ thống!");
+    public String processForgotPassword(@RequestParam(value = "username", required = false) String username,
+                                        @RequestParam(value = "email", required = false) String email,
+                                        Model model) {
+        User user = null;
+        if (username != null && !username.trim().isEmpty()) {
+            user = userService.getUserByUsername(username.trim());
+        } else if (email != null && !email.trim().isEmpty()) {
+            user = userService.getUserByEmail(email.trim());
+        }
+
+        if (user == null) {
+            model.addAttribute("error", "Không tìm thấy tài khoản tương ứng!");
+            if (username != null) model.addAttribute("username", username);
             return "auth/forgot-password";
         }
-        model.addAttribute("success", "Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hòm thư của bạn!");
+
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            model.addAttribute("error", "Tài khoản này chưa có email đăng ký!");
+            model.addAttribute("username", user.getUsername());
+            return "auth/forgot-password";
+        }
+
+        String targetEmail = user.getEmail().trim();
+        String token = userService.createPasswordResetToken(targetEmail);
+        if (token == null) {
+            model.addAttribute("error", "Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại!");
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("email", targetEmail);
+            return "auth/forgot-password";
+        }
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", targetEmail);
+        model.addAttribute("success", "Đã gửi email đặt lại mật khẩu đến: " + targetEmail + ". Vui lòng kiểm tra hộp thư của bạn!");
         return "auth/forgot-password";
     }
 

@@ -13,7 +13,7 @@
 <body>
     <div class="login-container">
         <h2>🔑 Quên mật khẩu</h2>
-        <p class="subtitle">Nhập email để nhận link đặt lại mật khẩu</p>
+        <p class="subtitle">Xác nhận gửi email đặt lại mật khẩu</p>
 
         <c:if test="${not empty error}">
             <div class="message-error">${error}</div>
@@ -23,14 +23,40 @@
             <div class="message-success">${success}</div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/auth/forgot-password" method="post">
-            <div class="form-group">
-                <label for="email">Email <span class="required">*</span></label>
-                <input type="email" id="email" name="email"
-                       placeholder="example@email.com" required />
-            </div>
-            <button type="submit" class="btn-login">Gửi yêu cầu</button>
-        </form>
+        <c:choose>
+            <c:when test="${not empty email}">
+                <div style="background: rgba(255, 255, 255, 0.06); padding: 18px 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid rgba(255, 255, 255, 0.12);">
+                    <div style="margin-bottom: 10px; color: rgba(255, 255, 255, 0.85); font-size: 14px;">
+                        <span style="color: rgba(255, 255, 255, 0.6);">Tên tài khoản:</span> 
+                        <strong style="color: #a78bfa; font-size: 15px; margin-left: 6px;">${username}</strong>
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.85); font-size: 14px;">
+                        <span style="color: rgba(255, 255, 255, 0.6);">Email đăng ký:</span> 
+                        <strong style="color: #34d399; font-size: 15px; margin-left: 6px;">${email}</strong>
+                    </div>
+                </div>
+
+                <c:if test="${empty success}">
+                    <form action="${pageContext.request.contextPath}/auth/forgot-password" method="post">
+                        <input type="hidden" name="username" value="${username}" />
+                        <input type="hidden" name="email" value="${email}" />
+                        <button type="submit" class="btn-login">📧 Gửi email</button>
+                    </form>
+                </c:if>
+            </c:when>
+            <c:otherwise>
+                <c:if test="${empty success}">
+                    <form action="${pageContext.request.contextPath}/auth/forgot-password" method="get">
+                        <div class="form-group">
+                            <label for="username">Tên đăng nhập <span class="required">*</span></label>
+                            <input type="text" id="username" name="username"
+                                   placeholder="Nhập tên đăng nhập của bạn" value="${username}" required />
+                        </div>
+                        <button type="submit" class="btn-login">Tiếp tục</button>
+                    </form>
+                </c:if>
+            </c:otherwise>
+        </c:choose>
 
         <div class="bottom-links">
             <a href="${pageContext.request.contextPath}/auth/login">← Quay lại đăng nhập</a>

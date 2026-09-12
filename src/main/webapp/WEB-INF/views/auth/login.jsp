@@ -42,13 +42,34 @@
                 </div>
 
                 <div class="bottom-links">
-                    <a href="${pageContext.request.contextPath}/auth/forgot-password">Quên mật khẩu?</a>
+                    <a href="${pageContext.request.contextPath}/auth/forgot-password" onclick="return handleForgotPassword(event)">Quên mật khẩu?</a>
                 </div>
 
                 <div class="home-link">
                     <a href="${pageContext.request.contextPath}/">← Quay về trang chủ</a>
                 </div>
             </div>
+
+            <script>
+                function handleForgotPassword(event) {
+                    if (event) {
+                        event.preventDefault();
+                    }
+                    var usernameInput = document.getElementById('username');
+                    var username = usernameInput ? usernameInput.value.trim() : '';
+
+                    if (!username) {
+                        alert('Vui lòng nhập tên đăng nhập trước khi chọn Quên mật khẩu!');
+                        if (usernameInput) {
+                            usernameInput.focus();
+                        }
+                        return false;
+                    }
+
+                    window.location.href = '${pageContext.request.contextPath}/auth/forgot-password?username=' + encodeURIComponent(username);
+                    return false;
+                }
+            </script>
         </body>
 
         </html>
