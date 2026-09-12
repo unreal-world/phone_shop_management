@@ -82,6 +82,45 @@ public class WebConfig implements WebMvcConfigurer {
         return new org.springframework.web.multipart.support.StandardServletMultipartResolver();
     }
 
+    @Bean
+    public org.springframework.mail.javamail.JavaMailSender javaMailSender() {
+        org.springframework.mail.javamail.JavaMailSenderImpl mailSender = new org.springframework.mail.javamail.JavaMailSenderImpl();
+        
+        String mailHost = System.getenv("MAIL_HOST");
+        if (mailHost == null || mailHost.isEmpty()) {
+            mailHost = env.getProperty("mail.host");
+        }
+        
+        String mailPortStr = System.getenv("MAIL_PORT");
+        if (mailPortStr == null || mailPortStr.isEmpty()) {
+            mailPortStr = env.getProperty("mail.port", "587");
+        }
+        
+        String mailUsername = System.getenv("MAIL_USERNAME");
+        if (mailUsername == null || mailUsername.isEmpty()) {
+            mailUsername = env.getProperty("mail.username");
+        }
+        
+        String mailPassword = System.getenv("MAIL_PASSWORD");
+        if (mailPassword == null || mailPassword.isEmpty()) {
+            mailPassword = env.getProperty("mail.password");
+        }
+        
+        mailSender.setHost(mailHost);
+        mailSender.setPort(Integer.parseInt(mailPortStr != null && !mailPortStr.isEmpty() ? mailPortStr : "587"));
+        mailSender.setUsername(mailUsername);
+        mailSender.setPassword(mailPassword);
+
+        java.util.Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.debug", "true"); // In log chi tiết quá trình gửi mail
+
+        return mailSender;
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");

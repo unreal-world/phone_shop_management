@@ -150,8 +150,11 @@ public class UserServiceImpl implements UserService {
                     + "</div>";
 
             helper.setText(htmlContent, true); // true = gửi định dạng HTML
+            System.out.println("⏳ Đang gửi email đặt lại mật khẩu đến: " + email + " qua " + fromEmail);
             mailSender.send(mimeMessage);
+            System.out.println("✅ ĐÃ GỬI EMAIL THÀNH CÔNG ĐẾN: " + email);
         } catch (Exception e) {
+            System.err.println("❌ LỖI GỬI EMAIL ĐẾN " + email + ": " + e.getMessage());
             e.printStackTrace();
         }
 
