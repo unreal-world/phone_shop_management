@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService {
             if (fromEmail == null || fromEmail.isEmpty()) {
                 fromEmail = env.getProperty("mail.from", env.getProperty("mail.username", "unrealworld2002@gmail.com"));
             }
+            if (fromEmail != null) fromEmail = fromEmail.trim();
             helper.setFrom(fromEmail);
             helper.setTo(email);
             helper.setSubject("[Phone Store] Đặt lại mật khẩu");
@@ -130,6 +131,7 @@ public class UserServiceImpl implements UserService {
             if (baseUrl == null || baseUrl.isEmpty()) {
                 baseUrl = env.getProperty("app.baseUrl", "http://localhost:8080");
             }
+            if (baseUrl != null) baseUrl = baseUrl.trim();
             if (baseUrl.endsWith("/")) {
                 baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
             }

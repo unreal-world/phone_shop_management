@@ -106,6 +106,11 @@ public class WebConfig implements WebMvcConfigurer {
             mailPassword = env.getProperty("mail.password");
         }
         
+        if (mailHost != null) mailHost = mailHost.trim();
+        if (mailPortStr != null) mailPortStr = mailPortStr.trim();
+        if (mailUsername != null) mailUsername = mailUsername.trim();
+        if (mailPassword != null) mailPassword = mailPassword.trim();
+        
         mailSender.setHost(mailHost);
         mailSender.setPort(Integer.parseInt(mailPortStr != null && !mailPortStr.isEmpty() ? mailPortStr : "587"));
         mailSender.setUsername(mailUsername);
