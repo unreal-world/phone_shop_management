@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping({"/auth", "/phonestore/auth"})
 public class AuthController {
 
     @Autowired
@@ -92,7 +92,11 @@ public class AuthController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+    public String showResetPasswordForm(@RequestParam(value = "token", required = false) String token, Model model) {
+        if (token == null || token.trim().isEmpty()) {
+            model.addAttribute("error", "Liên kết không hợp lệ (thiếu mã token xác thực)!");
+            return "auth/reset-password";
+        }
         String userID = userService.validatePasswordResetToken(token);
         if (userID == null) {
             model.addAttribute("error", "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn!");

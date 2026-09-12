@@ -52,8 +52,8 @@
                         <select name="sort" onchange="this.form.submit()" id="sortSelect"
                                 style="padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer; font-size: 14px;">
                             <option value="" ${empty sort ? 'selected' : ''}>-- Sắp xếp --</option>
-                            <option value="price_asc"  ${'price_asc'  == sort ? 'selected' : ''}>💰 Giá: Thấp → Cao</option>
-                            <option value="price_desc" ${'price_desc' == sort ? 'selected' : ''}>💎 Giá: Cao → Thấp</option>
+                            <option value="price_asc"  ${'price_asc'  == sort ? 'selected' : ''}>Giá: Thấp → Cao</option>
+                            <option value="price_desc" ${'price_desc' == sort ? 'selected' : ''}>Giá: Cao → Thấp</option>
                         </select>
 
                         <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Tìm kiếm</button>
