@@ -49,23 +49,63 @@ public class AuthController {
     public String processRegister(@ModelAttribute("user") User user,
                                   @RequestParam("confirmPassword") String confirmPassword,
                                   Model model) {
+        // Validate tên đăng nhập
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            model.addAttribute("error", "Tên đăng nhập không được để trống!");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
+        user.setUsername(user.getUsername().trim());
+
+        // Validate mật khẩu
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            model.addAttribute("error", "Mật khẩu không được để trống!");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
+
         // Validate mật khẩu xác nhận
         if (!user.getPassword().equals(confirmPassword)) {
             model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
+            model.addAttribute("user", user);
             return "auth/register";
         }
 
         // Validate username đã tồn tại
         if (userService.existsByUsername(user.getUsername())) {
             model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
+
+        // Validate email là bắt buộc
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            model.addAttribute("error", "Email là bắt buộc!");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
+        user.setEmail(user.getEmail().trim());
+
+        // Validate định dạng email chuẩn
+        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        if (!user.getEmail().matches(emailPattern)) {
+            model.addAttribute("error", "Email không đúng định dạng chuẩn (ví dụ: example@email.com)!");
+            model.addAttribute("user", user);
             return "auth/register";
         }
 
         // Validate email đã tồn tại
-        if (user.getEmail() != null && !user.getEmail().isEmpty()
-                && userService.existsByEmail(user.getEmail())) {
+        if (userService.existsByEmail(user.getEmail())) {
             model.addAttribute("error", "Email đã được sử dụng!");
+            model.addAttribute("user", user);
             return "auth/register";
+        }
+
+        if (user.getFullName() != null) {
+            user.setFullName(user.getFullName().trim());
+        }
+        if (user.getPhoneNumber() != null) {
+            user.setPhoneNumber(user.getPhoneNumber().trim());
         }
 
         userService.register(user);

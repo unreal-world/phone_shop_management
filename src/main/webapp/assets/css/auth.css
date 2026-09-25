@@ -146,6 +146,54 @@ h2 {
     flex: 1;
 }
 
+/* Password Toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+    z-index: 2;
+    border-radius: 6px;
+}
+
+.toggle-password-btn:hover {
+    color: #a78bfa;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.toggle-password-btn:focus {
+    outline: none;
+    color: #fff;
+}
+
+.toggle-password-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    display: block;
+}
+
 /* Buttons */
 .btn-login,
 .btn-register,

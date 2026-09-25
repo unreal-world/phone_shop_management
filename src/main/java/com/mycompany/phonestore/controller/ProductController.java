@@ -35,12 +35,55 @@ public class ProductController {
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute("product") Product product,
                               @RequestParam(value = "productImage", required = false) MultipartFile productImage,
+                              Model model,
                               HttpServletRequest request) {
-        boolean isNew = false;
-        if (product.getProductID() == null || product.getProductID().trim().isEmpty()) {
+        boolean isNew = (product.getProductID() == null || product.getProductID().trim().isEmpty());
+
+        // Validate các trường bắt buộc
+        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
+            model.addAttribute("error", "Tên sản phẩm không được để trống!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        if (product.getBrand() == null || product.getBrand().trim().isEmpty()) {
+            model.addAttribute("error", "Hãng sản xuất không được để trống!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        if (product.getPrice() == null || product.getPrice() < 0) {
+            model.addAttribute("error", "Giá bán không hợp lệ!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        if (product.getDescription() == null || product.getDescription().trim().isEmpty()) {
+            model.addAttribute("error", "Mô tả sản phẩm không được để trống!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        if (product.getStock_quantity() == null || product.getStock_quantity() < 0) {
+            model.addAttribute("error", "Số lượng tồn kho không hợp lệ!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        // Validate ảnh sản phẩm bắt buộc khi thêm mới
+        if (isNew && (productImage == null || productImage.isEmpty())) {
+            model.addAttribute("error", "Hình ảnh sản phẩm là bắt buộc khi thêm sản phẩm mới!");
+            model.addAttribute("product", product);
+            return "products/form";
+        }
+
+        product.setProductName(product.getProductName().trim());
+        product.setBrand(product.getBrand().trim());
+        product.setDescription(product.getDescription().trim());
+
+        if (isNew) {
             product.setProductID(java.util.UUID.randomUUID().toString());
             productService.saveProduct(product);
-            isNew = true;
         } else {
             productService.updateProduct(product);
         }

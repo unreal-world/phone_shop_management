@@ -56,12 +56,40 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Mật khẩu mới</label>
-                    <input type="password" name="newPassword" id="newPassword" placeholder="Nhập mật khẩu mới" />
+                    <label for="newPassword">Mật khẩu mới</label>
+                    <div class="password-wrapper">
+                        <input type="password" name="newPassword" id="newPassword" placeholder="Nhập mật khẩu mới" />
+                        <button type="button" class="toggle-password-btn" onclick="togglePassword('newPassword', this)" title="Hiện mật khẩu" aria-label="Hiện mật khẩu">
+                            <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-icon eye-close" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                <line x1="2" x2="22" y1="2" y2="22"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Xác nhận mật khẩu</label>
-                    <input type="password" name="confirmNewPassword" id="confirmNewPassword" placeholder="Nhập lại mật khẩu" />
+                    <label for="confirmNewPassword">Xác nhận mật khẩu</label>
+                    <div class="password-wrapper">
+                        <input type="password" name="confirmNewPassword" id="confirmNewPassword" placeholder="Nhập lại mật khẩu" />
+                        <button type="button" class="toggle-password-btn" onclick="togglePassword('confirmNewPassword', this)" title="Hiện mật khẩu" aria-label="Hiện mật khẩu">
+                            <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-icon eye-close" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                <line x1="2" x2="22" y1="2" y2="22"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
             <p class="hint-text">Để trống nếu không muốn đổi mật khẩu.</p>
@@ -76,6 +104,22 @@
     </div>
 
     <script>
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            if (!input) return;
+            var isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            
+            var eyeOpen = btn.querySelector('.eye-open');
+            var eyeClose = btn.querySelector('.eye-close');
+            if (eyeOpen && eyeClose) {
+                eyeOpen.style.display = isPassword ? 'none' : 'block';
+                eyeClose.style.display = isPassword ? 'block' : 'none';
+            }
+            btn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+            btn.setAttribute('title', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+        }
+
         document.getElementById('profileForm').addEventListener('submit', function(e) {
             var newPass = document.getElementById('newPassword').value;
             var confirmPass = document.getElementById('confirmNewPassword').value;

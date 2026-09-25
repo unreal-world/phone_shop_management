@@ -28,30 +28,59 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Mật khẩu <span class="required">*</span></label>
-                            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" required />
+                            <label for="password">Mật khẩu <span class="required">*</span></label>
+                            <div class="password-wrapper">
+                                <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" required />
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword('password', this)" title="Hiện mật khẩu" aria-label="Hiện mật khẩu">
+                                    <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg class="eye-icon eye-close" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                        <line x1="2" x2="22" y1="2" y2="22"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Xác nhận mật khẩu <span class="required">*</span></label>
-                            <input type="password" name="confirmPassword" id="confirmPassword"
-                                placeholder="Nhập lại mật khẩu" required />
-                            <div class="client-error" id="passwordError">Mật khẩu không khớp!</div>
+                            <label for="confirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
+                            <div class="password-wrapper">
+                                <input type="password" name="confirmPassword" id="confirmPassword"
+                                    placeholder="Nhập lại mật khẩu" required />
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword('confirmPassword', this)" title="Hiện mật khẩu" aria-label="Hiện mật khẩu">
+                                    <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg class="eye-icon eye-close" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                        <line x1="2" x2="22" y1="2" y2="22"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="client-error" id="passwordError">Mật khẩu xác nhận không khớp!</div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Họ và tên</label>
-                        <input type="text" name="fullName" placeholder="Nhập họ và tên" value="${user.fullName}" />
+                        <label for="fullName">Họ và tên</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Nhập họ và tên" value="${user.fullName}" />
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" placeholder="example@email.com" value="${user.email}" />
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="example@email.com" value="${user.email}" required />
+                            <div class="client-error" id="emailError"></div>
                         </div>
                         <div class="form-group">
-                            <label>Số điện thoại</label>
-                            <input type="text" name="phoneNumber" placeholder="0123 456 789"
+                            <label for="phoneNumber">Số điện thoại</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="0123 456 789"
                                 value="${user.phoneNumber}" />
                         </div>
                     </div>
@@ -70,16 +99,69 @@
             </div>
 
             <script>
+                function togglePassword(inputId, btn) {
+                    var input = document.getElementById(inputId);
+                    if (!input) return;
+                    var isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    
+                    var eyeOpen = btn.querySelector('.eye-open');
+                    var eyeClose = btn.querySelector('.eye-close');
+                    if (eyeOpen && eyeClose) {
+                        eyeOpen.style.display = isPassword ? 'none' : 'block';
+                        eyeClose.style.display = isPassword ? 'block' : 'none';
+                    }
+                    btn.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+                    btn.setAttribute('title', isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+                }
+
                 document.getElementById('registerForm').addEventListener('submit', function (e) {
                     var password = document.getElementById('password').value;
                     var confirmPassword = document.getElementById('confirmPassword').value;
-                    var errorDiv = document.getElementById('passwordError');
+                    var passwordError = document.getElementById('passwordError');
+                    var emailInput = document.getElementById('email');
+                    var email = emailInput ? emailInput.value.trim() : '';
+                    var emailError = document.getElementById('emailError');
+                    var isValid = true;
 
+                    // Reset errors
+                    if (passwordError) passwordError.style.display = 'none';
+                    if (emailError) {
+                        emailError.style.display = 'none';
+                        emailError.innerText = '';
+                    }
+
+                    // Validate email bắt buộc & định dạng chuẩn
+                    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!email) {
+                        e.preventDefault();
+                        if (emailError) {
+                            emailError.innerText = 'Vui lòng nhập địa chỉ email!';
+                            emailError.style.display = 'block';
+                        }
+                        emailInput.focus();
+                        isValid = false;
+                    } else if (!emailPattern.test(email)) {
+                        e.preventDefault();
+                        if (emailError) {
+                            emailError.innerText = 'Email không đúng định dạng chuẩn (ví dụ: user@example.com)!';
+                            emailError.style.display = 'block';
+                        }
+                        emailInput.focus();
+                        isValid = false;
+                    }
+
+                    // Validate mật khẩu xác nhận
                     if (password !== confirmPassword) {
                         e.preventDefault();
-                        errorDiv.style.display = 'block';
-                    } else {
-                        errorDiv.style.display = 'none';
+                        if (passwordError) {
+                            passwordError.innerText = 'Mật khẩu xác nhận không khớp!';
+                            passwordError.style.display = 'block';
+                        }
+                        if (isValid) {
+                            document.getElementById('confirmPassword').focus();
+                        }
+                        isValid = false;
                     }
                 });
             </script>
