@@ -74,14 +74,16 @@
 
                 <div class="checkout-form">
                     <h3>Thông tin thanh toán</h3>
-                    <form action="${pageContext.request.contextPath}/cart/checkout" method="post">
+                    <form action="${pageContext.request.contextPath}/cart/checkout" method="post" id="checkoutForm">
                         <div class="form-group">
-                            <label for="receiver">Người nhận hàng:</label>
-                            <input type="text" id="receiver" name="receiver" value="${sessionScope.loggedInUser != null && sessionScope.loggedInUser.fullName != null && !sessionScope.loggedInUser.fullName.isEmpty() ? sessionScope.loggedInUser.fullName : sessionScope.loggedInUser.username}" required>
+                            <label for="receiver">Họ và tên người nhận <span style="color: red;">*</span>:</label>
+                            <input type="text" id="receiver" name="receiver" placeholder="Nhập họ và tên người nhận" value="${sessionScope.loggedInUser != null && sessionScope.loggedInUser.fullName != null && !sessionScope.loggedInUser.fullName.isEmpty() ? sessionScope.loggedInUser.fullName : sessionScope.loggedInUser.username}" required>
+                            <div id="receiverError" style="color: #dc3545; font-size: 13px; margin-top: 4px; display: none;">Họ và tên người nhận không được để trống!</div>
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber">Số điện thoại:</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" value="${sessionScope.loggedInUser.phoneNumber}" required>
+                            <label for="phoneNumber">Số điện thoại <span style="color: red;">*</span>:</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Nhập số điện thoại nhận hàng" value="${sessionScope.loggedInUser.phoneNumber}" required>
+                            <div id="phoneError" style="color: #dc3545; font-size: 13px; margin-top: 4px; display: none;">Số điện thoại không được để trống!</div>
                         </div>
                         <div class="form-group">
                             <label>Địa chỉ giao hàng:</label>
@@ -138,6 +140,35 @@
                                     inputs.forEach(function(input) { input.required = false; });
                                 }
                             }
+
+                            document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+                                var receiverInput = document.getElementById('receiver');
+                                var phoneInput = document.getElementById('phoneNumber');
+                                var receiverError = document.getElementById('receiverError');
+                                var phoneError = document.getElementById('phoneError');
+                                var receiver = receiverInput ? receiverInput.value.trim() : '';
+                                var phone = phoneInput ? phoneInput.value.trim() : '';
+                                var isValid = true;
+
+                                if (receiverError) receiverError.style.display = 'none';
+                                if (phoneError) phoneError.style.display = 'none';
+
+                                if (!receiver) {
+                                    e.preventDefault();
+                                    if (receiverError) receiverError.style.display = 'block';
+                                    receiverInput.focus();
+                                    isValid = false;
+                                }
+
+                                if (!phone) {
+                                    e.preventDefault();
+                                    if (phoneError) phoneError.style.display = 'block';
+                                    if (isValid) {
+                                        phoneInput.focus();
+                                    }
+                                    isValid = false;
+                                }
+                            });
 
                             function previewDiscount() {
                                 var code = document.getElementById('discountCode').value.trim();

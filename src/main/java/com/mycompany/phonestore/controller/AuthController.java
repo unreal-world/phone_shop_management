@@ -78,6 +78,14 @@ public class AuthController {
             return "auth/register";
         }
 
+        // Validate họ và tên là bắt buộc
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            model.addAttribute("error", "Họ và tên không được để trống!");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
+        user.setFullName(user.getFullName().trim());
+
         // Validate email là bắt buộc
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             model.addAttribute("error", "Email là bắt buộc!");

@@ -170,6 +170,19 @@ public class CartController {
             return "redirect:/auth/login";
         }
 
+        if (receiver == null || receiver.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Họ và tên người nhận không được để trống.");
+            return "redirect:/cart";
+        }
+
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Số điện thoại không được để trống.");
+            return "redirect:/cart";
+        }
+
+        receiver = receiver.trim();
+        phoneNumber = phoneNumber.trim();
+
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Giỏ hàng trống.");

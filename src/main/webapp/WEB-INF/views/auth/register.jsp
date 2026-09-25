@@ -68,8 +68,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="fullName">Họ và tên</label>
-                        <input type="text" id="fullName" name="fullName" placeholder="Nhập họ và tên" value="${user.fullName}" />
+                        <label for="fullName">Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Nhập họ và tên" value="${user.fullName}" required />
+                        <div class="client-error" id="fullNameError"></div>
                     </div>
 
                     <div class="form-row">
@@ -119,6 +120,9 @@
                     var password = document.getElementById('password').value;
                     var confirmPassword = document.getElementById('confirmPassword').value;
                     var passwordError = document.getElementById('passwordError');
+                    var fullNameInput = document.getElementById('fullName');
+                    var fullName = fullNameInput ? fullNameInput.value.trim() : '';
+                    var fullNameError = document.getElementById('fullNameError');
                     var emailInput = document.getElementById('email');
                     var email = emailInput ? emailInput.value.trim() : '';
                     var emailError = document.getElementById('emailError');
@@ -126,9 +130,24 @@
 
                     // Reset errors
                     if (passwordError) passwordError.style.display = 'none';
+                    if (fullNameError) {
+                        fullNameError.style.display = 'none';
+                        fullNameError.innerText = '';
+                    }
                     if (emailError) {
                         emailError.style.display = 'none';
                         emailError.innerText = '';
+                    }
+
+                    // Validate họ và tên bắt buộc
+                    if (!fullName) {
+                        e.preventDefault();
+                        if (fullNameError) {
+                            fullNameError.innerText = 'Vui lòng nhập họ và tên!';
+                            fullNameError.style.display = 'block';
+                        }
+                        fullNameInput.focus();
+                        isValid = false;
                     }
 
                     // Validate email bắt buộc & định dạng chuẩn
@@ -139,7 +158,9 @@
                             emailError.innerText = 'Vui lòng nhập địa chỉ email!';
                             emailError.style.display = 'block';
                         }
-                        emailInput.focus();
+                        if (isValid) {
+                            emailInput.focus();
+                        }
                         isValid = false;
                     } else if (!emailPattern.test(email)) {
                         e.preventDefault();
@@ -147,7 +168,9 @@
                             emailError.innerText = 'Email không đúng định dạng chuẩn (ví dụ: user@example.com)!';
                             emailError.style.display = 'block';
                         }
-                        emailInput.focus();
+                        if (isValid) {
+                            emailInput.focus();
+                        }
                         isValid = false;
                     }
 
