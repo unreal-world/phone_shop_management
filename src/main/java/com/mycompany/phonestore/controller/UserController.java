@@ -71,7 +71,6 @@ public class UserController {
 
     @PostMapping("/profile/update")
     public String updateProfile(@RequestParam("fullName") String fullName,
-                                @RequestParam("email") String email,
                                 @RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam(value = "newPassword", required = false) String newPassword,
                                 @RequestParam(value = "confirmNewPassword", required = false) String confirmNewPassword,
@@ -84,18 +83,8 @@ public class UserController {
         // Lấy user mới nhất từ DB
         User user = userService.getUserById(loggedInUser.getUserID());
 
-        // Kiểm tra email trùng (nếu thay đổi)
-        if (email != null && !email.isEmpty() && !email.equals(user.getEmail())) {
-            if (userService.existsByEmail(email)) {
-                model.addAttribute("error", "Email đã được sử dụng bởi tài khoản khác!");
-                model.addAttribute("user", user);
-                return "user/profile";
-            }
-        }
-
         // Cập nhật thông tin cơ bản
         user.setFullName(fullName);
-        user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
 
         // Cập nhật mật khẩu nếu có nhập mới

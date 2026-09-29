@@ -42,8 +42,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="example@email.com"
-                           value="${user.email}" />
+                    <input type="email" value="${user.email}" readonly />
                 </div>
                 <div class="form-group">
                     <label>Số điện thoại</label>
